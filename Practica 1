@@ -77,49 +77,42 @@ end.
 program tp1ej8;
 
 type
-	tArray = array [1..20] of integer;
+	tArray = array [1..10] of integer;
 
 var	
-	arr:tArray;
-	num,elemento,i:integer;
+	arr:tArray = (1,2,3,4,5,6,7,8,9,10);
+	num,i:integer;
 
-function busquedaBin (a:tArray;n:integer):integer;
+function busquedaBin (a:tArray;n,ini,fin:integer):integer;
 
 var
-    x,y,m:integer;
+    m:integer;
 
-begin                        
-    x:=1;                        
-    y:=20;
-    busquedaBin:=0;               
-    repeat
-        m:=(x+y) div 2;
-        if n = a[m] then
-        begin
-            busquedaBin:=m;
-        end
-        else if n < a[m] then
-        begin
-            y:=m-1;
-        end
-        else
-        begin
-            x:=m+1;
-        end;
-    until (x > y) or (busquedaBin <> 0);
+begin
+    
+    m:=(ini+fin) div 2;
+    if ini > fin then
+    begin
+        busquedaBin:=0;
+    end
+    else if n = a[m] then
+    begin
+        busquedaBin:=m;
+    end
+    else if n < a[m] then
+    begin
+        busquedaBin:=busquedaBin(a,n,ini,m-1);
+    end
+    else
+    begin
+        busquedaBin:=busquedaBin(a,n,m+1,fin);
+    end;
+    
 end;
 
 begin
 
-	randomize;
-	elemento:=random(5);
-    for i:=1 to 20 do
-    begin
-        arr[i]:=elemento;
-        elemento:=elemento+random(4)+1;
-    end;
-	
-	for i:=1 to 20 do
+	for i:=1 to 10 do
     begin
         write(arr[i],' ');
     end;
@@ -128,9 +121,9 @@ begin
 	write('ingrese el numero entero que desea buscar: ');
 	readln(num);
 	writeln;
-	if busquedaBin(arr,num) <> 0 then
+	if busquedaBin(arr,num,1,10) <> 0 then
     begin
-        writeln('el numero esta en la posicion ',busquedaBin(arr,num))
+        writeln('el numero esta en la posicion ',busquedaBin(arr,num,1,10))
     end
     else
     begin
