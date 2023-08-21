@@ -26,7 +26,7 @@ begin
     	end
     	else
     	begin
-    		writeln('ingrese un numero mayor o igual a cero');
+    		fibonacci:=-1;
     	end;
     end;	
 	
@@ -35,7 +35,14 @@ end;
 begin
 
 	readln(num);
-	writeln('el ',num,'esimo termino de la serie es ',fibonacci(num));
+	if fibonacci(num) <> -1 then
+	begin
+	    writeln('el ',num+1,'esimo termino de la serie es ',fibonacci(num));
+	end
+	else
+	begin
+	    writeln('ingrese un nro mayor o igual a cero');
+	end;
 	
 end.
 
