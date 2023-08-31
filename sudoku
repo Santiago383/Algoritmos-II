@@ -2,6 +2,8 @@ program sudoku2;
 
 var
 	sdk:array [0..8,0..8] of integer;
+	sdkAux:array [0..8,0..8] of integer;
+	
 	
 
 	
@@ -43,98 +45,63 @@ end;
 
 procedure resolverAux;
 
-type
-	tNros = set of integer;
-
 var	
-	n,x,y,x0,y0,c:integer;
-	desc:array [1..9] of integer;
-	unoAlNueve:tNros = (1,2,3,4,5,6,7,8,9);
+	k,n,x,y,x0,y0:integer;
+	
 	
 begin
+	randomize;
 	for x:=0 to 8 do
 	begin
 		for y:=0 to 8 do
 		begin
-			if sdk[x,y] = 0 then
-			
+			if sdkAux[x,y] = 0 then	
 			begin
-				for n:=1 to 9 do
+				for k:=1 to 9 do
 				begin
-					if not (repetido(n,x,y)) and (n not in [desc[1],desc[2],desc[3],desc[4],desc[5],desc[6],desc[7],desc[8],desc[9]]) then
+					n:=random(8)+1;
+					if not repetido(n,x,y) then
 					begin
 						sdk[x,y]:=n;
-						x0:=x;
-						y0:=y;
 						resolver;
-					end
-					else if desc[9] not in unoAlNueve then
-					begin
-						c:=1;
-						for z:=1 to 9 do
-						begin
-							if (desc[z] not in unoAlNueve) and (c = 1) then
-							begin
-								desc[z]:=sdk[x0,y0];
-								c:=c+1;
-							end;
-						end;
-						sdk[x0,y0]:=0;
-						resolverAux;
 					end
 					else
 					begin
-						for z:=1 to 9 do
-						begin
-							desc[z]:=0;
-						end;
-						
+						resolverAux;
 					end;
 				end;
 			end;
 		end;
 	end;
 end;
+
+
 
 
 procedure resolver;
 
-type
-	tNros = set of integer;
-
 var	
-	n,x,y,x0,y0,c:integer;
-	desc:array [1..9] of integer;
-	unoAlNueve:tNros = (1,2,3,4,5,6,7,8,9);
+	k,n,x,y,x0,y0:integer;
+	
 	
 begin
+	randomize;
 	for x:=0 to 8 do
 	begin
 		for y:=0 to 8 do
 		begin
 			if sdk[x,y] = 0 then
 			begin
-				for n:=1 to 9 do
+				for k:=1 to 9 do
 				begin
+					n:=random(8)+1;
 					if not repetido(n,x,y) then
 					begin
 						sdk[x,y]:=n;
-						x0:=x;
-						y0:=y;
 						resolver;
 					end
 					else
 					begin
-						c:=1;
-						for z:=1 to 9 do
-						begin
-							if (desc[z] not in unoAlNueve) and (c = 1) then
-							begin
-								desc[z]:=sdk[x0,y0];
-								c:=c+1;
-							end;
-						end;
-						sdk[x0,y0]:=0;
 						resolverAux;
 					end;
 				end;
@@ -144,9 +111,12 @@ begin
 end;
 
 
+
+
+
 BEGIN
 	
-	
+
 	
 
 END.
