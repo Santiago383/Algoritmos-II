@@ -87,9 +87,9 @@ end;
 {este procedimiento de abajo recorre la matriz, cunado encuentra un cero prueba numeros del 1 al 9, si cumple con la condición escribe ese número encima del 
 cero y llama al procedimiento de nuevo. Cuando ninguno de los nueve números cumple con la condición sale de la llamada recursiva; ahora está de nuevo en la 
 última celda donde había puesto un número que cumplía la condición pero conducía a una callejón sin salida, entonces escribe un cero encima de ese número 
-y sigue el bucle con otro número distinto hasta que encuentre el que no lleva a un callejón sin salida. Notemos que cuando ningun número se puede poner 
-en una celda hay un exit inmediatamente después para no imprimir el sudoku a medio resolver. Sólo cuando no quedan ceros en la matriz termina la recorrida 
-de la misma y el procedimiento la imprime.}
+y sigue el bucle con otro número distinto hasta que encuentre el que no lleva a un callejón sin salida. Cuando ningun número se puede poner 
+en una celda hay un exit inmediatamente después para saltar hasta el final y poder seguir con la recursión sin pasar por el mostrar que hay al final. 
+Sólo cuando no quedan ceros en la matriz termina la recorrida de la misma y el procedimiento la imprime.}
 
 procedure resolverTablero;
     
@@ -111,8 +111,8 @@ begin
     					resolverTablero;
     					sdk[x,y]:=0;
     				end;
-    			end;
-    			exit;
+			    end;
+			    exit;
 			end;
 		end;
 	end;
