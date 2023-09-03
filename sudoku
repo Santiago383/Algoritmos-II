@@ -77,9 +77,9 @@ begin
 		begin
 			write(sdk[i,j],' ');
 		end;
-		writeln
+		writeln;
     end;
-    writeln
+    writeln;
 end;
 
 
