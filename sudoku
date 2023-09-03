@@ -1,35 +1,71 @@
 program sudoku2;
 
+uses
+    sysutils;
+
+const
+	ruta1 = 'C:\Users\Usuario\Desktop\ucalp1\Algo2\tpSDK\sudoku1.txt';
+    	ruta2 = 'C:\Users\Usuario\Desktop\ucalp1\Algo2\tpSDK\sudoku2.txt';
+
 var
 	sdk:array [0..8,0..8] of integer;
 	i,j:integer;
 
-{esta parte que sigue es sólo para probar si funciona, lo de archivos despues lo agrego}
 
-procedure llenarTablero;
+{Ya le agrague la parte de cargar y guardar archivos. Estos procedimientos que hice requieren que el archivo tenga el siguiente formato: las incognitas
+representadas por ceros y sin espacio entre los números.}
+
+procedure leerArchivo(ruta1:string);
+
+var	
+	archtext:text;
+	caracter:char;
+    iNum,code:integer;
 
 begin
-	for i:=0 to 8 do
-	begin
-		for j:=0 to 8 do
-		begin
-			sdk[i,j]:=0;
-		end;		
-	end;
-	
-	sdk[0,0] := 6; sdk[0,2] := 7; sdk[0,6] := 9;
-	sdk[0,8] := 8; sdk[1,2] := 3; sdk[1,3] := 9; 
-	sdk[1,5] := 1; sdk[1,6] := 6; sdk[2,1] := 4; 
-	sdk[2,3] := 8; sdk[2,6] := 5; sdk[3,1] := 1; 
-	sdk[3,2] := 5; sdk[3,3] := 7; sdk[3,4] := 2; 
-	sdk[3,6] := 8; sdk[3,7] := 6; sdk[4,4] := 4; 
-	sdk[4,7] := 5; sdk[5,1] := 7; sdk[5,2] := 9; 
-	sdk[5,4] := 6; sdk[6,3] := 6; sdk[6,4] := 9; 
-	sdk[6,7] := 4; sdk[7,5] := 3; sdk[8,2] := 2;
-	sdk[8,3] := 5; sdk[8,4] := 1; sdk[8,8] := 6;
-	
+	assign(archtext,ruta1);
+	reset(archtext);
+    while not eof(archtext) do
+    begin
+        for i:=0 to 8 do
+        begin
+            while not eoln(archtext) do
+            begin
+                for j:=0 to 8 do
+                begin
+                    read(archtext,caracter);
+                    val(caracter,iNum,code);
+                    sdk[i,j]:=iNum;
+                end;
+            end;
+            writeln;
+            readln(archtext);
+        end;
+    end;
+	close(archtext);
 end;
 
+
+procedure guardarArchivo(ruta2:string);
+
+var 
+    archtext2:text;
+    caracter2:string;
+
+begin
+    assign(archtext2,ruta2);
+    rewrite(archtext2);
+    for i:=0 to 8 do
+    begin
+        for j:=0 to 8 do
+        begin
+            caracter2:=intToStr(sdk[i,j]);
+            write(archtext2,caracter2);
+        end;
+        writeln(archtext2,'');
+    end;
+    close(archtext2);
+end;
 
 
 procedure mostrarTablero;
@@ -47,7 +83,6 @@ begin
 end;
 
 
-	
 function repetido (num,x,y:integer):boolean;
 
 var
@@ -84,6 +119,7 @@ begin
 end;
 
 
+
 {este procedimiento de abajo recorre la matriz, cunado encuentra un cero prueba numeros del 1 al 9, si cumple con la condición escribe ese número encima del 
 cero y llama al procedimiento de nuevo. Cuando ninguno de los nueve números cumple con la condición sale de la llamada recursiva; ahora está de nuevo en la 
 última celda donde había puesto un número que cumplía la condición pero conducía a una callejón sin salida, entonces escribe un cero encima de ese número 
@@ -111,19 +147,22 @@ begin
     					resolverTablero;
     					sdk[x,y]:=0;
     				end;
-			    end;
-			    exit;
+    			end;
+    			exit;
 			end;
 		end;
 	end;
-	mostrarTablero;	
+	mostrarTablero;
+	guardarArchivo(ruta2);
 end;
 
 
 
-BEGIN
-	llenarTablero;
-	mostrarTablero;
-	writeln;
-	resolverTablero;
-END.
+begin
+    leerArchivo(ruta1);
+    mostrarTablero;
+    writeln;
+    resolverTablero;
+    
+    
+end.
