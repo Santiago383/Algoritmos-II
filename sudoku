@@ -162,7 +162,5 @@ begin
     leerArchivo(ruta1);
     mostrarTablero;
     writeln;
-    resolverTablero;
-    
-    
+    resolverTablero;  
 end.
