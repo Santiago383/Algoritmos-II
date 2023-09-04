@@ -1,7 +1,7 @@
 program sudoku2;
 
 uses
-    sysutils;
+    	sysutils;
     
 type
 	tArray = array [0..8,0..8] of integer;
@@ -11,7 +11,7 @@ const
     	ruta2 = 'C:\Users\Usuario\Desktop\ucalp1\Algo2\tpSDK\sudoku2.txt';
 
 var
-	sdk,sdk2,sdk3,sdk4:tArray;
+	sdk,sdk2:tArray;
 	i,j:integer;
 
 
@@ -21,28 +21,28 @@ procedure leerArchivo(ruta1:string;var tablero:tArray);
 var	
 	archtext:text;
 	caracter:char;
-    iNum,code:integer;
+    	iNum,code:integer;
 
 begin
 	assign(archtext,ruta1);
 	reset(archtext);
-    while not eof(archtext) do
-    begin
-        for i:=0 to 8 do
-        begin
-            while not eoln(archtext) do
-            begin
-                for j:=0 to 8 do
-                begin
-                    read(archtext,caracter);
-                    val(caracter,iNum,code);
-                    tablero[i,j]:=iNum;
-                end;
-            end;
-            writeln;
-            readln(archtext);
-        end;
-    end;
+	    while not eof(archtext) do
+	    begin
+	        for i:=0 to 8 do
+	        begin
+	            while not eoln(archtext) do
+	            begin
+	                for j:=0 to 8 do
+	                begin
+	                    read(archtext,caracter);
+	                    val(caracter,iNum,code);
+	                    tablero[i,j]:=iNum;
+	                end;
+	            end;
+	            writeln;
+	            readln(archtext);
+	        end;
+	    end;
 	close(archtext);
 end;
 
@@ -74,11 +74,11 @@ procedure mostrarTablero(tablero:tArray);
 begin
   for i:=0 to 8 do
     begin
-		for j:=0 to 8 do
-		begin
-			write(tablero[i,j],' ');
-		end;
-		writeln;
+	for j:=0 to 8 do
+	begin
+		write(tablero[i,j],' ');
+	end;
+	writeln;
     end;
     writeln;
 end;
@@ -163,13 +163,40 @@ begin
 end;
 
 
+procedure cargarCeros(var tableroResuelto:tArray);
+
+var
+	p:integer;
 
 begin
-	leerArchivo(ruta1,sdk);
-	mostrarTablero(sdk);
+	randomize;
+	for i:=0 to 8 do
+	begin
+		for j:=0 to 8 do
+		begin
+			p:=random(3);
+			if (p = 0) or (p = 1) then
+			begin
+				tableroResuelto[i,j]:=0;
+			end;
+		end;
+	end;
+end;
+
+
+
+begin
+	leerArchivo(ruta1,sdk);		{lee el archivo}
+	mostrarTablero(sdk);		{lo muestra en pantalla}
 	writeln;
-	resolverTablero;
-	mostrarTablero(sdk2);
-	guardarArchivo(ruta2,sdk2);
-		
+	resolverTablero;		{resuleve}
+	mostrarTablero(sdk2);		{muestra el resultado}
+	cargarCeros(sdk2);		{pone ceros en el resuelto para crear otro}
+	guardarArchivo(ruta2,sdk2);	{lo guarda}
+	writeln;
+	leerArchivo(ruta2,sdk);		{lee el nuevo}
+	mostrarTablero(sdk);		{lo muestra}
+	writeln;
+	resolverTablero;		{lo resuelve}
+	mostrarTablero(sdk2);		{lo muestra}		
 end.
