@@ -2,18 +2,20 @@ program sudoku2;
 
 uses
     sysutils;
+    
+type
+	tArray = array [0..8,0..8] of integer;
 
 const
 	ruta1 = 'C:\Users\Usuario\Desktop\ucalp1\Algo2\tpSDK\sudoku1.txt';
     	ruta2 = 'C:\Users\Usuario\Desktop\ucalp1\Algo2\tpSDK\sudoku2.txt';
 
 var
-	sdk:array [0..8,0..8] of integer;
+	sdk,sdk2:tArray;
 	i,j:integer;
 
 
-{Ya le agregue la parte de cargar y guardar archivos. Estos procedimientos que hice requieren que el archivo tenga el siguiente formato: las incognitas
-representadas por ceros y sin espacio entre los números.}
+{ya le agregue la parte de archivos}
 
 procedure leerArchivo(ruta1:string);
 
@@ -46,7 +48,7 @@ begin
 end;
 
 
-procedure guardarArchivo(ruta2:string);
+procedure guardarArchivo(ruta2:string;tablero:tArray);
 
 var 
     archtext2:text;
@@ -59,7 +61,7 @@ begin
     begin
         for j:=0 to 8 do
         begin
-            caracter2:=intToStr(sdk[i,j]);
+            caracter2:=intToStr(tablero[i,j]);
             write(archtext2,caracter2);
         end;
         writeln(archtext2,'');
@@ -68,14 +70,14 @@ begin
 end;
 
 
-procedure mostrarTablero;
+procedure mostrarTablero(tablero:tArray);
 
 begin
   for i:=0 to 8 do
     begin
 		for j:=0 to 8 do
 		begin
-			write(sdk[i,j],' ');
+			write(tablero[i,j],' ');
 		end;
 		writeln;
     end;
@@ -123,9 +125,9 @@ end;
 {este procedimiento de abajo recorre la matriz, cuando encuentra un cero prueba numeros del 1 al 9, si cumple con la condición escribe ese número encima del 
 cero y llama al procedimiento de nuevo. Cuando ninguno de los nueve números cumple con la condición sale de la llamada recursiva; ahora está de nuevo en la 
 última celda donde había puesto un número que cumplía la condición pero conducía a una callejón sin salida, entonces escribe un cero encima de ese número 
-y sigue el loop con otro número distinto hasta que encuentre el que no lleva a un callejón sin salida. Cuando ningun número se puede poner 
-en una celda hay un exit inmediatamente después para saltar hasta el final y poder seguir con la recursión sin pasar por los otros loops. 
-Sólo cuando no quedan ceros en la matriz termina la recorrida de la misma y el procedimiento la imprime.}
+y sigue el bucle con otro número distinto hasta que encuentre el que no lleva a un callejón sin salida. Cuando ningun número se puede poner 
+en una celda hay un exit inmediatamente después para saltar hasta el final y poder seguir con la recursión sin pasar por los otros bucles. 
+Sólo cuando no quedan ceros en la matriz termina la recorrida de la misma y el procedimiento escribe los resultados en un tablero auxiliar.}
 
 procedure resolverTablero;
     
@@ -143,24 +145,31 @@ begin
 			    begin
     				if not repetido(z,x,y) then
     				begin
-    					sdk[x,y]:=z;
-    					resolverTablero;
-    					sdk[x,y]:=0;
+					sdk[x,y]:=z;
+					resolverTablero;
+					sdk[x,y]:=0;
     				end;
-    			end;
+    			    end;
     			exit;
 			end;
 		end;
 	end;
-	mostrarTablero;
-	guardarArchivo(ruta2);
+	for x:=0 to 8 do
+	begin
+		for y:=0 to 8 do
+		begin
+			sdk2[x,y]:=sdk[x,y];
+		end;
+	end;
 end;
 
 
 
-begin
-    leerArchivo(ruta1);
-    mostrarTablero;
-    writeln;
-    resolverTablero;  
+begin 
+	leerArchivo(ruta1);
+	mostrarTablero(sdk);
+	writeln;
+	resolverTablero;
+	mostrarTablero(sdk2);
+	guardarArchivo(ruta2,sdk2);
 end.
