@@ -191,7 +191,7 @@ begin
 	leerArchivo(ruta1,sdk);		{lee el archivo}
 	mostrarTablero(sdk);		{lo muestra en pantalla}
 	writeln;
-	resolverTablero;		{resuleve}
+	resolverTablero;		{resuelve}
 	mostrarTablero(sdk2);		{muestra el resultado}
 	cargarCeros(sdk2);		{pone ceros en el resuelto para crear otro}
 	guardarArchivo(ruta2,sdk2);	{lo guarda}
