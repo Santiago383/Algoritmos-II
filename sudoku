@@ -11,13 +11,12 @@ const
     	ruta2 = 'C:\Users\Usuario\Desktop\ucalp1\Algo2\tpSDK\sudoku2.txt';
 
 var
-	sdk,sdk2:tArray;
+	sdk,sdk2,sdk3,sdk4:tArray;
 	i,j:integer;
 
 
-{ya le agregue la parte de archivos}
 
-procedure leerArchivo(ruta1:string);
+procedure leerArchivo(ruta1:string;var tablero:tArray);
 
 var	
 	archtext:text;
@@ -37,7 +36,7 @@ begin
                 begin
                     read(archtext,caracter);
                     val(caracter,iNum,code);
-                    sdk[i,j]:=iNum;
+                    tablero[i,j]:=iNum;
                 end;
             end;
             writeln;
@@ -127,7 +126,7 @@ cero y llama al procedimiento de nuevo. Cuando ninguno de los nueve números cum
 última celda donde había puesto un número que cumplía la condición pero conducía a una callejón sin salida, entonces escribe un cero encima de ese número 
 y sigue el bucle con otro número distinto hasta que encuentre el que no lleva a un callejón sin salida. Cuando ningun número se puede poner 
 en una celda hay un exit inmediatamente después para saltar hasta el final y poder seguir con la recursión sin pasar por los otros bucles. 
-Sólo cuando no quedan ceros en la matriz termina la recorrida de la misma y el procedimiento escribe los resultados en un tablero auxiliar.}
+Sólo cuando no quedan ceros en la matriz termina la recorrida de la misma y el procedimiento guarda el resultado en una matriz auxiliar.}
 
 procedure resolverTablero;
     
@@ -145,9 +144,9 @@ begin
 			    begin
     				if not repetido(z,x,y) then
     				begin
-					sdk[x,y]:=z;
-					resolverTablero;
-					sdk[x,y]:=0;
+    					sdk[x,y]:=z;
+    					resolverTablero;
+    					sdk[x,y]:=0;
     				end;
     			    end;
     			exit;
@@ -165,11 +164,12 @@ end;
 
 
 
-begin 
-	leerArchivo(ruta1);
+begin
+	leerArchivo(ruta1,sdk);
 	mostrarTablero(sdk);
 	writeln;
 	resolverTablero;
 	mostrarTablero(sdk2);
 	guardarArchivo(ruta2,sdk2);
+		
 end.
