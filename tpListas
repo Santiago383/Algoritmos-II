@@ -1,0 +1,374 @@
+program estudiantes;
+
+type
+	tpNodo = ^tNodo;
+	tNodo = record
+		nombre:string;
+		id,edad,promedio:integer;
+		sig:tpNodo;
+	end;
+	
+const
+	ruta1 = 'C:\Users\Usuario\Desktop\ucalp1\Algo2\tplistas\listaTP2.txt';
+	ruta2 = 'C:\Users\Usuario\Desktop\ucalp1\Algo2\tplistas\listaTP2b.txt';
+	
+var
+	lista:tpNodo;
+	vNombre,op:string;
+	vId,vEdad,vPromedio:integer;
+
+
+
+procedure crearLista(var l:tpNodo);
+
+begin
+	l:=nil;
+end;
+
+
+
+function listaVacia(l:tpNodo):boolean;
+
+begin
+	if l = nil then
+	begin
+		listaVacia:=true;
+	end
+	else
+	begin
+		listaVacia:=false;
+	end;
+end;
+
+
+
+function primero(l:tpNodo):tpNodo;
+	
+begin
+	primero:=l;
+end;
+
+
+
+function siguiente(l,p:tpNodo):tpNodo;
+	
+begin
+	siguiente:=p^.sig;
+end;
+
+
+
+function anterior(l,p:tpNodo):tpNodo;
+
+var
+	pos:tpNodo;
+
+begin
+	pos:=primero(l);
+	while (pos <> nil) and (siguiente(l,pos) <> p) do
+	begin
+		pos:=siguiente(l,pos);
+	end;
+	anterior:=pos;
+end;		
+
+
+
+function ultimo(l:tpNodo):tpNodo;
+
+var
+	pos:tpNodo;
+	
+begin
+	pos:=primero(l);
+	while siguiente(l,pos) <> nil do
+	begin
+		pos:=siguiente(l,pos);
+	end;
+	ultimo:=pos;
+end;
+
+
+
+function datoNombre(l,p:tpNodo):string;
+
+begin
+	datoNombre:=p^.nombre;
+end;
+
+
+
+function datoId(l,p:tpNodo):integer;
+
+begin
+	datoId:=p^.id;
+end;
+
+
+
+function datoEdad(l,p:tpNodo):integer;
+
+begin
+	datoEdad:=p^.edad;
+end;
+
+
+
+function datoPromedio(l,p:tpNodo):integer;
+
+begin
+	datoPromedio:=p^.promedio;
+end;
+
+
+
+function buscarPorId(l:tpNodo;i:integer):tpNodo;
+
+var
+	pos:tpNodo;
+
+begin
+	pos:=primero(l);
+	while (pos <> nil) and (datoId(l,pos) <> i) do
+	begin
+		pos:=siguiente(l,pos)
+	end;
+	buscarPorId:=pos;
+end;	
+
+
+
+function crearNodo(var p:tpNodo;n:string;i,ed,pr:integer):tpNodo;
+
+begin
+	new(p);
+	if p <> nil then
+	begin
+		p^.nombre:=n;
+		p^.id:=i;
+		p^.edad:=ed;
+		p^.promedio:=pr;
+		p^.sig:=nil;
+	end;
+	crearNodo:=p;
+end;
+
+
+
+function insertar(var l:tpNodo;n:string;i,ed,pr:integer):boolean;
+
+var
+	p,q:tpNodo;
+	
+begin
+	if crearNodo(p,n,i,ed,pr) <> nil then
+	begin
+		insertar:=true;
+		if listaVacia(l) then
+		begin
+			l:=p;
+		end
+		else
+		begin
+			q:=ultimo(l);
+			q^.sig:=p;
+		end;
+	end
+	else
+	begin
+		insertar:=false;
+	end;
+end;	
+
+
+
+procedure eliminar(var l:tpNodo;p:tpNodo);
+
+var
+	q:tpNodo;
+
+begin
+	if p = primero(l) then
+	begin
+		l:=siguiente(l,p);
+		dispose(p);
+	end
+	else
+	begin
+		q:=anterior(l,p);
+		q^.sig:=siguiente(l,p);
+		dispose(p);
+	end;
+end;
+
+
+
+procedure leer(ruta1:string;var l:tpNodo);
+
+var
+	archivo:text;
+	sNombre:string;
+	iId,iEdad,iProm:integer;
+
+begin
+	assign(archivo,ruta1);
+	reset(archivo);
+	while not eof(archivo) do
+	begin
+		readln(archivo,sNombre);
+		readln(archivo,iId);
+		readln(archivo,iEdad);
+		readln(archivo,iProm);
+		insertar(lista,sNombre,iId,iEdad,iProm);
+	end;
+	close(archivo);
+end;
+
+
+
+procedure mostrar(l:tpNodo);
+
+var
+	p:tpNodo;
+
+begin
+	p:=primero(l);
+	while p <> nil do
+	begin
+		write('nombre:',datoNombre(l,p),' ');
+		write('id:',datoId(l,p),' ');
+		write('edad:',datoEdad(l,p),' ');
+		writeln('promedio:',datoPromedio(l,p));
+		writeln;
+		p:=siguiente(l,p);
+	end;
+	writeln;
+end;
+
+
+
+function calcularProm(l:tpNodo):real;
+
+var
+	p:tpNodo;
+	suma,total:integer;
+
+begin
+	suma:=0;
+	total:=0;
+	p:=primero(l);
+	while p <> nil do
+	begin
+		suma:=suma+datoPromedio(l,p);
+		total:=total+1;
+		p:=siguiente(l,p);
+	end;
+	calcularProm:=suma/total;
+end;
+
+
+
+procedure guardar(ruta2:string;l:tpNodo);
+
+var
+	p:tpNodo;
+	archivo:text;
+
+begin
+	assign(archivo,ruta2);
+	rewrite(archivo);
+	p:=primero(l);
+	while p <> nil do
+	begin
+		writeln(archivo,datoNombre(l,p));
+		writeln(archivo,datoId(l,p));
+		writeln(archivo,datoEdad(l,p));
+		writeln(archivo,datoPromedio(l,p));
+		p:=siguiente(l,p);
+	end;
+	close(archivo);
+end;
+
+
+
+BEGIN
+	crearLista(lista);
+	leer(ruta1,lista);
+	writeln('Seleccione una opcion:');
+	writeln('mostrar(m)/agregar(a)/promedio(p)/eliminar(e)/guardar(g)/salir(s)');
+	readln(op);
+	while op <> 's' do
+	begin
+		if op = 'm' then
+		begin
+			writeln;
+			mostrar(lista);
+			writeln;
+			writeln('Seleccione una opcion:');
+			writeln('mostrar(m)/agregar(a)/promedio(p)/eliminar(e)/guardar(g)/salir(s)');
+			readln(op);
+		end
+		else if op = 'a' then
+		begin
+			write('ingrese nombre:');
+			readln(vNombre);
+			write('ingrese id:');
+			readln(vId);
+			write('ingrese edad:');
+			readln(vEdad);
+			write('ingrese promedio:');
+			readln(vPromedio);
+			if insertar(lista,vNombre,vId,vEdad,vPromedio) then
+			begin
+				writeln;
+				mostrar(lista);
+				writeln;
+				writeln('Seleccione una opcion:');
+				writeln('mostrar(m)/agregar(a)/promedio(p)/eliminar(e)/guardar(g)/salir(s)');
+				readln(op);
+			end
+			else
+			begin
+				writeln('no se pudo realizar la operacion');
+				writeln;
+				writeln('Seleccione una opcion:');
+				writeln('mostrar(m)/agregar(a)/promedio(p)/eliminar(e)/guardar(g)/salir(s)');
+				readln(op);
+			end;
+		end
+		else if op = 'p' then
+		begin
+			writeln('el promedio es:',calcularProm(lista):0:2);
+			writeln;
+			writeln('Seleccione una opcion:');
+			writeln('mostrar(m)/agregar(a)/promedio(p)/eliminar(e)/guardar(g)/salir(s)');
+			readln(op);
+		end
+		else if op = 'e' then
+		begin
+			write('ingrese numero de id:');
+			readln(vId);
+			eliminar(lista,buscarPorId(lista,vId));
+			writeln;
+			mostrar(lista);
+			writeln;
+			writeln('Seleccione una opcion:');
+			writeln('mostrar(m)/agregar(a)/promedio(p)/eliminar(e)/guardar(g)/salir(s)');
+			readln(op);
+		end
+		else if op = 'g' then
+		begin
+			guardar(ruta2,lista);
+			writeln;
+			writeln('Seleccione una opcion:');
+			writeln('mostrar(m)/agregar(a)/promedio(p)/eliminar(e)/guardar(g)/salir(s)');
+			readln(op);
+		end
+		else
+		begin
+			writeln('seleccione una opcion valida');
+			writeln('mostrar(m)/agregar(a)/promedio(p)/eliminar(e)/guardar(g)/salir(s)');
+			readln(op);
+		end;	
+	end;
+END.
