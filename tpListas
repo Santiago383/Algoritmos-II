@@ -121,6 +121,18 @@ begin
 		aux:=siguiente(l,aux);
 	end;
 	buscarPorId:=aux;
+end;
+
+
+
+function idRepetida(l:tpNodo;i:integer):boolean;
+
+begin
+	idRepetida:=false;
+	if buscarPorId(l,i) <> nil then
+	begin
+		idRepetida:=true;
+	end;
 end;	
 
 
@@ -292,17 +304,28 @@ BEGIN
 			readln(vNombre);
 			write('ingrese id:');
 			readln(vId);
-			write('ingrese edad:');
-			readln(vEdad);
-			write('ingrese promedio:');
-			readln(vPromedio);
-			insertar(lista,vNombre,vId,vEdad,vPromedio);
-			writeln;
-			mostrar(lista);
-			writeln;
-			writeln('Seleccione una opcion:');
-			writeln('mostrar(m)/agregar(a)/promedio(p)/eliminar(e)/guardar(g)/salir(s)');
-			readln(op);
+			if not idRepetida(lista,vId) then
+			begin
+				write('ingrese edad:');
+				readln(vEdad);
+				write('ingrese promedio:');
+				readln(vPromedio);
+				insertar(lista,vNombre,vId,vEdad,vPromedio);
+				writeln;
+				mostrar(lista);
+				writeln;
+				writeln('Seleccione una opcion:');
+				writeln('mostrar(m)/agregar(a)/promedio(p)/eliminar(e)/guardar(g)/salir(s)');
+				readln(op);
+			end
+			else
+			begin
+				writeln('el numero de identificacion ya esta en uso');
+				writeln;
+				writeln('Seleccione una opcion:');
+				writeln('mostrar(m)/agregar(a)/promedio(p)/eliminar(e)/guardar(g)/salir(s)');
+				readln(op);
+			end;	
 		end
 		else if op = 'p' then
 		begin
@@ -316,13 +339,24 @@ BEGIN
 		begin
 			write('ingrese numero de id:');
 			readln(vId);
-			eliminar(lista,buscarPorId(lista,vId));
-			writeln;
-			mostrar(lista);
-			writeln;
-			writeln('Seleccione una opcion:');
-			writeln('mostrar(m)/agregar(a)/promedio(p)/eliminar(e)/guardar(g)/salir(s)');
-			readln(op);
+			if idRepetida(lista,vId) then
+			begin
+				eliminar(lista,buscarPorId(lista,vId));
+				writeln;
+				mostrar(lista);
+				writeln;
+				writeln('Seleccione una opcion:');
+				writeln('mostrar(m)/agregar(a)/promedio(p)/eliminar(e)/guardar(g)/salir(s)');
+				readln(op);
+			end
+			else
+			begin
+				writeln('no hay ningun estudiante con ese numero de identificacion');
+				writeln;
+				writeln('Seleccione una opcion:');
+				writeln('mostrar(m)/agregar(a)/promedio(p)/eliminar(e)/guardar(g)/salir(s)');
+				readln(op);
+			end;	
 		end
 		else if op = 'g' then
 		begin
