@@ -116,7 +116,7 @@ begin
 	pos:=primero(l);
 	while (pos <> nil) and (datoId(l,pos) <> i) do
 	begin
-		pos:=siguiente(l,pos)
+		pos:=siguiente(l,pos);
 	end;
 	buscarPorId:=pos;
 end;	
@@ -127,14 +127,11 @@ procedure crearNodo(var p:tpNodo;n:string;i,ed,pr:integer);
 
 begin
 	new(p);
-	if p <> nil then
-	begin
-		p^.nombre:=n;
-		p^.id:=i;
-		p^.edad:=ed;
-		p^.promedio:=pr;
-		p^.sig:=nil;
-	end;
+	p^.nombre:=n;
+	p^.id:=i;
+	p^.edad:=ed;
+	p^.promedio:=pr;
+	p^.sig:=nil;
 end;
 
 
