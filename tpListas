@@ -157,7 +157,7 @@ end;
 procedure insertar(var l:tpNodo;n:string;i,ed,pr:integer);
 
 var
-	p,q:tpNodo;
+	p,aux:tpNodo;
 	
 begin
 	crearNodo(p,n,i,ed,pr);
@@ -167,8 +167,8 @@ begin
 	end
 	else
 	begin
-		q:=ultimo(l);
-		q^.sig:=p;
+		aux:=ultimo(l);
+		aux^.sig:=p;
 	end;
 end;	
 
@@ -177,7 +177,7 @@ end;
 procedure eliminar(var l:tpNodo;p:tpNodo);
 
 var
-	q:tpNodo;
+	aux:tpNodo;
 
 begin
 	if p = primero(l) then
@@ -187,8 +187,8 @@ begin
 	end
 	else
 	begin
-		q:=anterior(l,p);
-		q^.sig:=siguiente(l,p);
+		aux:=anterior(l,p);
+		aux^.sig:=siguiente(l,p);
 		dispose(p);
 	end;
 end;
