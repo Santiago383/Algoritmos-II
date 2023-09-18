@@ -4,7 +4,8 @@ type
 	tpNodo = ^tNodo;
 	tNodo = record
 		nombre:string;
-		id,edad,promedio:integer;
+		id,edad:integer;
+		promedio:real;
 		sig:tpNodo;
 	end;
 	
@@ -15,7 +16,8 @@ const
 var
 	lista:tpNodo;
 	vNombre,op:string;
-	vId,vEdad,vPromedio:integer;
+	vId,vEdad:integer;
+	vPromedio:real;
 
 
 
@@ -99,7 +101,7 @@ end;
 
 
 
-function datoPromedio(l,p:tpNodo):integer;
+function datoPromedio(l,p:tpNodo):real;
 
 begin
 	datoPromedio:=p^.promedio;
@@ -123,7 +125,7 @@ end;
 
 
 
-procedure crearNodo(var p:tpNodo;n:string;i,ed,pr:integer);
+procedure crearNodo(var p:tpNodo;n:string;i,ed:integer;pr:real);
 
 begin
 	new(p);
@@ -136,7 +138,7 @@ end;
 
 
 
-procedure insertar(var l:tpNodo;n:string;i,ed,pr:integer);
+procedure insertar(var l:tpNodo;n:string;i,ed:integer;pr:real);
 
 var
 	p,aux:tpNodo;
@@ -182,7 +184,8 @@ procedure leer(ruta1:string;var l:tpNodo);
 var
 	archivo:text;
 	sNombre:string;
-	iId,iEdad,iProm:integer;
+	iId,iEdad:integer;
+	iProm:real;
 
 begin
 	assign(archivo,ruta1);
@@ -212,7 +215,7 @@ begin
 		write('nombre:',datoNombre(l,p),' ');
 		write('id:',datoId(l,p),' ');
 		write('edad:',datoEdad(l,p),' ');
-		writeln('promedio:',datoPromedio(l,p));
+		writeln('promedio:',datoPromedio(l,p):0:1);
 		writeln;
 		p:=siguiente(l,p);
 	end;
@@ -225,7 +228,8 @@ function calcularProm(l:tpNodo):real;
 
 var
 	p:tpNodo;
-	suma,total:integer;
+	total:integer;
+	suma:real;
 
 begin
 	suma:=0;
@@ -257,7 +261,7 @@ begin
 		writeln(archivo,datoNombre(l,p));
 		writeln(archivo,datoId(l,p));
 		writeln(archivo,datoEdad(l,p));
-		writeln(archivo,datoPromedio(l,p));
+		writeln(archivo,datoPromedio(l,p):0:1);
 		p:=siguiente(l,p);
 	end;
 	close(archivo);
