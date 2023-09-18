@@ -138,7 +138,7 @@ end;
 
 
 
-function crearNodo(var p:tpNodo;n:string;i,ed,pr:integer):tpNodo;
+procedure crearNodo(var p:tpNodo;n:string;i,ed,pr:integer);
 
 begin
 	new(p);
@@ -150,33 +150,25 @@ begin
 		p^.promedio:=pr;
 		p^.sig:=nil;
 	end;
-	crearNodo:=p;
 end;
 
 
 
-function insertar(var l:tpNodo;n:string;i,ed,pr:integer):boolean;
+procedure insertar(var l:tpNodo;n:string;i,ed,pr:integer);
 
 var
 	p,q:tpNodo;
 	
 begin
-	if crearNodo(p,n,i,ed,pr) <> nil then
+	crearNodo(p,n,i,ed,pr);
+	if listaVacia(l) then
 	begin
-		insertar:=true;
-		if listaVacia(l) then
-		begin
-			l:=p;
-		end
-		else
-		begin
-			q:=ultimo(l);
-			q^.sig:=p;
-		end;
+		l:=p;
 	end
 	else
 	begin
-		insertar:=false;
+		q:=ultimo(l);
+		q^.sig:=p;
 	end;
 end;	
 
@@ -318,27 +310,17 @@ BEGIN
 			readln(vEdad);
 			write('ingrese promedio:');
 			readln(vPromedio);
-			if insertar(lista,vNombre,vId,vEdad,vPromedio) then
-			begin
-				writeln;
-				mostrar(lista);
-				writeln;
-				writeln('Seleccione una opcion:');
-				writeln('mostrar(m)/agregar(a)/promedio(p)/eliminar(e)/guardar(g)/salir(s)');
-				readln(op);
-			end
-			else
-			begin
-				writeln('no se pudo realizar la operacion');
-				writeln;
-				writeln('Seleccione una opcion:');
-				writeln('mostrar(m)/agregar(a)/promedio(p)/eliminar(e)/guardar(g)/salir(s)');
-				readln(op);
-			end;
+			insertar(lista,vNombre,vId,vEdad,vPromedio);
+			writeln;
+			mostrar(lista);
+			writeln;
+			writeln('Seleccione una opcion:');
+			writeln('mostrar(m)/agregar(a)/promedio(p)/eliminar(e)/guardar(g)/salir(s)');
+			readln(op);
 		end
 		else if op = 'p' then
 		begin
-			writeln('el promedio es:',calcularProm(lista):0:2);
+			writeln('el promedio es:',calcularProm(lista):0:1);
 			writeln;
 			writeln('Seleccione una opcion:');
 			writeln('mostrar(m)/agregar(a)/promedio(p)/eliminar(e)/guardar(g)/salir(s)');
