@@ -46,15 +46,15 @@ end;
 function anterior(l,p:tpNodo):tpNodo;
 
 var
-	pos:tpNodo;
+	aux:tpNodo;
 
 begin
-	pos:=primero(l);
-	while (pos <> nil) and (siguiente(l,pos) <> p) do
+	aux:=primero(l);
+	while (aux <> nil) and (siguiente(l,aux) <> p) do
 	begin
-		pos:=siguiente(l,pos);
+		aux:=siguiente(l,aux);
 	end;
-	anterior:=pos;
+	anterior:=aux;
 end;		
 
 
@@ -62,15 +62,15 @@ end;
 function ultimo(l:tpNodo):tpNodo;
 
 var
-	pos:tpNodo;
+	aux:tpNodo;
 	
 begin
-	pos:=primero(l);
-	while siguiente(l,pos) <> nil do
+	aux:=primero(l);
+	while siguiente(l,aux) <> nil do
 	begin
-		pos:=siguiente(l,pos);
+		aux:=siguiente(l,aux);
 	end;
-	ultimo:=pos;
+	ultimo:=aux;
 end;
 
 
@@ -110,15 +110,15 @@ end;
 function buscarPorId(l:tpNodo;i:integer):tpNodo;
 
 var
-	pos:tpNodo;
+	aux:tpNodo;
 
 begin
-	pos:=primero(l);
-	while (pos <> nil) and (datoId(l,pos) <> i) do
+	aux:=primero(l);
+	while (aux <> nil) and (datoId(l,aux) <> i) do
 	begin
-		pos:=siguiente(l,pos);
+		aux:=siguiente(l,aux);
 	end;
-	buscarPorId:=pos;
+	buscarPorId:=aux;
 end;	
 
 
