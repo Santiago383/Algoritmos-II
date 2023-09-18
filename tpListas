@@ -27,21 +27,6 @@ end;
 
 
 
-function listaVacia(l:tpNodo):boolean;
-
-begin
-	if l = nil then
-	begin
-		listaVacia:=true;
-	end
-	else
-	begin
-		listaVacia:=false;
-	end;
-end;
-
-
-
 function primero(l:tpNodo):tpNodo;
 	
 begin
@@ -161,7 +146,7 @@ var
 	
 begin
 	crearNodo(p,n,i,ed,pr);
-	if listaVacia(l) then
+	if l = nil then
 	begin
 		l:=p;
 	end
