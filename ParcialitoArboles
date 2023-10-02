@@ -1,0 +1,112 @@
+program parcialito;
+
+type
+	tArbol = ^tNodo;
+	tNodo = record
+		dato:integer;
+		izq,der:tArbol;
+	end;
+	
+var
+
+	raiz:tArbol;
+	num:integer;
+
+
+
+procedure insertar(var r:tArbol;i:integer);
+
+begin
+
+	if (r = nil) then
+	begin
+		new(r);
+		r^.dato:=i;
+		r^.izq:=nil;
+		r^.der:=nil;
+	end
+	else if (i < r^.dato) then
+		insertar(r^.izq,i)
+	else if (i > r^.dato) then
+		insertar(r^.der,i);	
+		
+end;
+
+
+	
+function altArbol(r:tArbol):integer;
+
+var
+	altDer,altIzq:integer;
+	
+begin
+	
+	if (r = nil) then
+		exit (-1);	
+		
+	altIzq:=altArbol(r^.izq);	
+	altDer:=altArbol(r^.der);
+	
+	if (altIzq > altDer) then
+		exit (altIzq+1)
+	else
+		exit (altDer+1);
+		
+end;
+
+
+
+function anchoNivel(r:tArbol;n:integer):integer;
+
+begin
+	
+	if (r = nil) then
+		exit (0);
+		
+	if (n = 0) then
+		exit (1);
+		
+	if (n > 0) then
+		exit (anchoNivel(r^.izq,n-1)+anchoNivel(r^.der,n-1));	
+
+end;
+
+
+
+function anchoMax(r:tArbol):integer;
+
+var
+	i,ancho,alto,aMax:integer;
+
+begin
+	
+	aMax:=0;
+	alto:=altArbol(r);
+	
+	for i:=0 to alto do
+	begin
+		ancho:=anchoNivel(r,i);
+		if (ancho > aMax) then
+			aMax:=ancho;
+	end;
+	
+	exit (aMax);
+	
+end;
+
+
+BEGIN
+	
+	raiz:=nil;
+	read(num);
+	while num <> 0 do
+	begin
+		insertar(raiz,num);
+		read(num);
+	end;
+	
+	writeln;
+	writeln('altura: ',altArbol(raiz));
+	writeln('ancho: ',anchoMax(raiz));
+	
+END.
