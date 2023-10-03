@@ -1,0 +1,195 @@
+program parcialito;
+
+type
+	tArbol = ^tNodo;
+	tNodo = record
+		dato:integer;
+		izq,der:tArbol;
+	end;
+	
+var
+
+	raiz,rAux:tArbol;
+	num:integer;
+
+
+
+function potencia(x,y:integer):integer;
+
+begin
+
+	if y = 0 then
+	begin
+		potencia:=1;
+	end
+	else
+	begin
+		if y > 0 then
+		begin
+			potencia:=x*potencia(x,y-1);
+		end;
+	end;
+
+end;
+
+
+
+procedure insertar(var r:tArbol;i:integer);
+
+begin
+
+	if (r = nil) then
+	begin
+		new(r);
+		r^.dato:=i;
+		r^.izq:=nil;
+		r^.der:=nil;
+	end
+	else if (i < r^.dato) then
+		insertar(r^.izq,i)
+	else if (i > r^.dato) then
+		insertar(r^.der,i);	
+		
+end;
+
+
+	
+function altArbol(r:tArbol):integer;
+
+var
+	altDer,altIzq:integer;
+	
+begin
+	
+	if (r = nil) then
+		exit (-1);	
+		
+	altIzq:=altArbol(r^.izq);	
+	altDer:=altArbol(r^.der);
+	
+	if (altIzq > altDer) then
+		exit (altIzq+1)
+	else
+		exit (altDer+1);
+		
+end;
+
+
+
+procedure completar(var r:tArbol;n:integer);
+
+begin
+
+	if r = nil then
+	begin
+		new(r);
+		r^.dato:=0;
+		r^.izq:=nil;
+		r^.der:=nil;
+	end;
+	
+	if n = 0 then
+		exit;
+		
+	if n > 0 then
+	begin
+		completar(r^.izq,n-1);
+		completar(r^.der,n-1);
+	end;	
+
+end;
+
+
+
+function estructuraNivel(r:tArbol;n:integer;var e:string):string;
+
+begin
+		
+	if (n = 0) then
+	begin
+		if (r^.dato = 0) then
+			exit (e+'0')
+		else
+			exit (e+'1');
+	end;
+		
+	if (n > 0) then
+		exit (estructuraNivel(r^.izq,n-1,e)+estructuraNivel(r^.der,n-1,e));	
+
+end;
+
+
+
+function anchoNivel(r:tArbol;n:integer):integer;
+
+var
+	j,cont:integer;
+	a,est:string;
+
+begin
+	
+	cont:=0;
+	a:=estructuraNivel(r,n,est);
+	for j:=1 to length(a) do
+	begin
+		if a[j] = '0' then
+			cont:=cont+1
+		else if a[j] = '1' then
+			break;
+	end;		
+	for j:=length(a) downto 1 do
+	begin
+		if a[j] = '0' then
+			cont:=cont+1
+		else if a[j] = '1' then
+			break;
+	end;
+	
+	anchoNivel:=potencia(2,n)-cont;
+		
+end;
+
+
+
+function anchoMax(r:tArbol):integer;
+
+var
+	i,ancho,alto,aMax:integer;
+
+begin
+	
+	aMax:=0;
+	alto:=altArbol(r);
+	
+	for i:=0 to alto do
+	begin
+		ancho:=anchoNivel(r,i);
+		if (ancho > aMax) then
+		begin
+			aMax:=ancho;	
+		end;	
+	end;
+	
+	exit (aMax);
+	
+end;
+
+
+BEGIN
+	
+	raiz:=nil;
+	rAux:=nil;
+	read(num);
+	while num <> 999 do
+	begin
+		insertar(raiz,num);
+		insertar(rAux,num);
+		read(num);
+	end;
+	
+	completar(rAux,altArbol(raiz));
+	writeln;
+	writeln(altArbol(raiz));
+	writeln(anchoMax(rAux));
+	
+END.
