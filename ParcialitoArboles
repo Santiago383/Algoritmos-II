@@ -99,7 +99,7 @@ BEGIN
 	
 	raiz:=nil;
 	read(num);
-	while num <> 0 do
+	while num <> 999 do
 	begin
 		insertar(raiz,num);
 		read(num);
