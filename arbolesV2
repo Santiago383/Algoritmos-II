@@ -14,6 +14,9 @@ var
 
 
 
+{
+Funcion para calcular una potencia mas adelante porque la funcion power es medio rara.
+}
 function potencia(x,y:integer):integer;
 
 begin
@@ -33,7 +36,10 @@ begin
 end;
 
 
-
+{
+Procedimiento para crear un arbol, en este caso un arbol binario de busqueda. No advierte si hay valores repetidos asi que hay que evitarlos
+manualmente.
+}
 procedure insertar(var r:tArbol;i:integer);
 
 begin
@@ -53,7 +59,13 @@ begin
 end;
 
 
-	
+{
+Calcula la altura del arbol. Devuelve -1 cuando encuentra un puntero nulo porque asi el primer nivel queda con valor 0. Compara dos
+variables, altura izquierda y derecha, cuyos valores son obtenidos llamando recursivamente a las alturas del subarbol izquierdo y derecho.
+Si son iguales, incrementa una de las dos en 1 (en este caso la derecha pero da igual) y esa es la altura del subarbol de la llamada recursiva anterior. 
+Si una es mayor que la otra devuelve el valor de esa incrementado en 1 como valor. Asi hasta que vuelve a la primera comparación, la de los dos
+subarboles principales; elige el más alto (o cualquiera si son iguales) y devuelve su altura incrementada en uno como altura del arbol total.
+}
 function altArbol(r:tArbol):integer;
 
 var
@@ -75,7 +87,10 @@ begin
 end;
 
 
-
+{
+Procedimiento que recibe una copia auxiliar del arbol y su altura, y hasta el nivel maximo crea todos los nodos que le faltan para estar 
+completo. En los nodos creados pone siempre un mismo valor basura, en este caso 0, tiene que ser un valor que no exista en los nodos del arbol real.
+}
 procedure completar(var r:tArbol;n:integer);
 
 begin
@@ -100,7 +115,13 @@ begin
 end;
 
 
-
+{
+Funcion para determinar, en un nivel dado del arbol auxiliar, de izquierda a derecha, que nodos no existen en el arbol original (en el auxiliar existen
+y tienen un valor basura), y cuales si. Recibe el arbol, un entero (el nivel en cuestion) y un string (por referencia). Si el nivel es mayor que 0
+concatena recursivamente la estructura del nivel n-1 del subarbol izquierdo con la del derecho. Cuando llega al nivel 0 del subarbol mas profundo
+(que es el mismo nivel que el nivel n del arbol total) concatena un 0 si el dato del nodo es el valor basura (nodo inexistente en el arbol real)
+o un 1 si el dato no es cero (el nodo existe en el arbol real). Asi va escribiendo la estructura del nivel en un string y lo devuelve.
+}
 function estructuraNivel(r:tArbol;n:integer;var e:string):string;
 
 begin
@@ -119,7 +140,13 @@ begin
 end;
 
 
-
+{
+Funcion que calcula el ancho de un nivel dado. Le da el valor 'estructura' a un string y desde 1 hasta la longitud del string se fija
+si en esa posicion hay un 0, si lo hay incrementa un contador, e interrumpe el bucle cuando aparece el primer 1. Luego desde la longitud
+del string hasta 1 se fija si en esa posicion hay un 0 y si hay sigue incrementando el contador, cuando aparece el primer 1 interrumpe.
+Finalmente devuelve 2 elevado al nivel menos el contador. El contador conto la cantidad de nodos inexistentes que hay a la izquerda y a la derecha del
+primer nodo existente en cada lado. Si le restamos ese nro a 2^n (el ancho maximo teorico de un nivel n) obtenemos el ancho del nivel.
+}
 function anchoNivel(r:tArbol;n:integer):integer;
 
 var
@@ -150,7 +177,9 @@ begin
 end;
 
 
-
+{
+Funcion que calcula el ancho de todos los niveles del arbol, los compara y devuelve el mayor.
+}
 function anchoMax(r:tArbol):integer;
 
 var
