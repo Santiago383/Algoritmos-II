@@ -40,7 +40,7 @@ end;
 Calcula la altura del arbol. Devuelve -1 cuando encuentra un puntero nulo porque asi el primer nivel queda con valor 0. Compara dos
 variables, altura izquierda y derecha, cuyos valores son obtenidos llamando recursivamente a las alturas del subarbol izquierdo y derecho.
 Si son iguales, incrementa una de las dos en 1 (en este caso la derecha pero da igual) y esa es la altura del subarbol de la llamada recursiva anterior. 
-Si una es mayor que la otra devuelve el valor de esa incrementado en 1 como valor. Asi hasta que vuelve a la primera comparación, la de los dos
+Si una es mayor que la otra devuelve el valor de esa incrementado en 1. Asi hasta que vuelve a la primera comparación, la de los dos
 subarboles principales; elige el más alto (o cualquiera si son iguales) y devuelve su altura incrementada en uno como altura del arbol total.
 }	
 function altArbol(r:tArbol):integer;
