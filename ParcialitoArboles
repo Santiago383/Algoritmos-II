@@ -65,7 +65,7 @@ end;
 
 
 {
-Funcion para calcular el ancho de un nivel dado. Si el nivel es mayor que 0, devuelve recursivamente la suma del nivel n-1 del subarbol izquierdo
+Funcion para calcular el ancho de un nivel dado. Si el nivel es mayor que 0, devuelve recursivamente la suma del ancho del nivel n-1 del subarbol izquierdo
 mas el del derecho. Si el subarbol esta vacio (puntero nulo) devuelve 0, si no, si el nivel es 0 devuelve 1 (si es posible llegar al nivel 0 significa
 que hay un nodo en ese nivel). Esto funciona porque el nivel 0 del subarbol mas profundo es el mismo que el nivel n del arbol total. 
 La funcion va sumando 1 cuando en el nivel hay un nodo, y 0 cuando no hay nada. Asi va sumando recursivamente de izquierda a derecha hasta recorrer todo el 
