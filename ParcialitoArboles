@@ -14,7 +14,7 @@ var
 
 
 {
-Procedimiento para crear un arbol, en este caso un arbol binario de busqueda. No advierte si hay valores repetidos asi que hay que evitarlos
+Procedimiento para llenar un arbol, en este caso un arbol binario de busqueda. No advierte si hay valores repetidos asi que hay que evitarlos
 manualmente.
 }
 procedure insertar(var r:tArbol;i:integer);
