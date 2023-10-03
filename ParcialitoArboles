@@ -13,7 +13,10 @@ var
 	num:integer;
 
 
-
+{
+Procedimiento para crear un arbol, en este caso un arbol binario de busqueda. No advierte si hay valores repetidos asi que hay que evitarlos
+manualmente.
+}
 procedure insertar(var r:tArbol;i:integer);
 
 begin
@@ -33,7 +36,13 @@ begin
 end;
 
 
-	
+{
+Calcula la altura del arbol. Devuelve -1 cuando encuentra un puntero nulo porque asi el primer nivel queda con valor 0. Compara dos
+variables, altura izquierda y derecha, cuyos valores son obtenidos llamando recursivamente a las alturas del subarbol izquierdo y derecho.
+Si son iguales, incrementa una de las dos en 1 (en este caso la derecha pero da igual) y esa es la altura del subarbol de la llamada recursiva anterior. 
+Si una es mayor que la otra devuelve el valor de esa incrementado en 1 como valor. Asi hasta que vuelve a la primera comparación, la de los dos
+subarboles principales; elige el más alto (o cualquiera si son iguales) y devuelve su altura incrementada en uno como altura del arbol total.
+}	
 function altArbol(r:tArbol):integer;
 
 var
@@ -55,7 +64,13 @@ begin
 end;
 
 
-
+{
+Funcion para calcular el ancho de un nivel dado. Si el nivel es mayor que 0, devuelve recursivamente la suma del nivel n-1 del subarbol izquierdo
+mas el del derecho. Si el subarbol esta vacio (puntero nulo) devuelve 0, si no, si el nivel es 0 devuelve 1 (si es posible llegar al nivel 0 significa
+que hay un nodo en ese nivel). Esto funciona porque el nivel 0 del subarbol mas profundo es el mismo que el nivel n del arbol total. 
+La funcion va sumando 1 cuando en el nivel hay un nodo, y 0 cuando no hay nada. Asi va sumando recursivamente de izquierda a derecha hasta recorrer todo el 
+nivel y la suma es la suma de todos los nodos existentes en el mismo.
+}
 function anchoNivel(r:tArbol;n:integer):integer;
 
 begin
@@ -72,7 +87,9 @@ begin
 end;
 
 
-
+{
+Funcion que calcula el ancho de todos los niveles del arbol, los compara y devuelve el mayor.
+}
 function anchoMax(r:tArbol):integer;
 
 var
