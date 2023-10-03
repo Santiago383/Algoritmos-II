@@ -68,7 +68,7 @@ end;
 
 
 {
-Toma una copia del arbol y hasta su nivel maximo crea todos los nodos faltantes posibles, llenandolos simepre con un mismo valor basura (en este caso x)
+Toma una copia del arbol y hasta su nivel maximo crea todos los nodos faltantes posibles, llenandolos siempre con un mismo valor basura (en este caso x)
 que no se pueda confundir con los valores que aparecen en los nodos del arbol real.
 }
 procedure completar(var r:tArbol;n:integer);
