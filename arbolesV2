@@ -1,60 +1,40 @@
 program parcialito;
 
+uses
+	sysutils,strutils;
+
 type
 	tArbol = ^tNodo;
 	tNodo = record
-		dato:integer;
+		dato:string;
 		izq,der:tArbol;
 	end;
 	
 var
 
 	raiz,rAux:tArbol;
-	num:integer;
-
-
-
-{
-Funcion para calcular una potencia mas adelante porque la funcion power es medio rara.
-}
-function potencia(x,y:integer):integer;
-
-begin
-
-	if y = 0 then
-	begin
-		potencia:=1;
-	end
-	else
-	begin
-		if y > 0 then
-		begin
-			potencia:=x*potencia(x,y-1);
-		end;
-	end;
-
-end;
+	s:string;
 
 
 {
-Procedimiento para crear un arbol, en este caso un arbol binario de busqueda. No advierte si hay valores repetidos asi que hay que evitarlos
+Procedimiento para llenar un arbol, en este caso un arbol binario de busqueda. No advierte si hay valores repetidos asi que hay que evitarlos
 manualmente.
 }
-procedure insertar(var r:tArbol;i:integer);
+procedure insertar(var r:tArbol;d:string);
 
 begin
 
 	if (r = nil) then
 	begin
 		new(r);
-		r^.dato:=i;
+		r^.dato:=d;
 		r^.izq:=nil;
 		r^.der:=nil;
 	end
-	else if (i < r^.dato) then
-		insertar(r^.izq,i)
-	else if (i > r^.dato) then
-		insertar(r^.der,i);	
+	else if (strtoint(d) < strtoint(r^.dato)) then
+		insertar(r^.izq,d)
+	else if (strtoint(d) > strtoint(r^.dato)) then
+		insertar(r^.der,d);	
 		
 end;
 
@@ -63,7 +43,7 @@ end;
 Calcula la altura del arbol. Devuelve -1 cuando encuentra un puntero nulo porque asi el primer nivel queda con valor 0. Compara dos
 variables, altura izquierda y derecha, cuyos valores son obtenidos llamando recursivamente a las alturas del subarbol izquierdo y derecho.
 Si son iguales, incrementa una de las dos en 1 (en este caso la derecha pero da igual) y esa es la altura del subarbol de la llamada recursiva anterior. 
-Si una es mayor que la otra devuelve el valor de esa incrementado en 1 como valor. Asi hasta que vuelve a la primera comparación, la de los dos
+Si una es mayor que la otra devuelve el valor de esa incrementado en 1. Asi hasta que vuelve a la primera comparación, la de los dos
 subarboles principales; elige el más alto (o cualquiera si son iguales) y devuelve su altura incrementada en uno como altura del arbol total.
 }
 function altArbol(r:tArbol):integer;
@@ -88,8 +68,8 @@ end;
 
 
 {
-Procedimiento que recibe una copia auxiliar del arbol y su altura, y hasta el nivel maximo crea todos los nodos que le faltan para estar 
-completo. En los nodos creados pone siempre un mismo valor basura, en este caso 0, tiene que ser un valor que no exista en los nodos del arbol real.
+Toma una copia del arbol y hasta su nivel maximo crea todos los nodos faltantes posibles, llenandolos simepre con un mismo valor basura (en este caso x)
+que no se pueda confundir con los valores que aparecen en los nodos del arbol real.
 }
 procedure completar(var r:tArbol;n:integer);
 
@@ -98,7 +78,7 @@ begin
 	if r = nil then
 	begin
 		new(r);
-		r^.dato:=0;
+		r^.dato:='x';
 		r^.izq:=nil;
 		r^.der:=nil;
 	end;
@@ -116,11 +96,10 @@ end;
 
 
 {
-Funcion para determinar, en un nivel dado del arbol auxiliar, de izquierda a derecha, que nodos no existen en el arbol original (en el auxiliar existen
-y tienen un valor basura), y cuales si. Recibe el arbol, un entero (el nivel en cuestion) y un string (por referencia). Si el nivel es mayor que 0
-concatena recursivamente la estructura del nivel n-1 del subarbol izquierdo con la del derecho. Cuando llega al nivel 0 del subarbol mas profundo
-(que es el mismo nivel que el nivel n del arbol total) concatena un 0 si el dato del nodo es el valor basura (nodo inexistente en el arbol real)
-o un 1 si el dato no es cero (el nodo existe en el arbol real). Asi va escribiendo la estructura del nivel en un string y lo devuelve.
+Toma una copia del arbol cargada con nodos que identifican a los nodos inexistentes en el arbol real, un entero (el nivel que queremos mapear) y un string
+(por referencia). Si el nivel es mayor que 0 devuelve recursivamente la concatenacion de la estructura del nivel n-1 del subarbol izquierdo con la del 
+derecho. Si el nivel es 0, si el dato es x (nodo inexistente en el arbol real) concatena 0, si no concatena 1, y asi de izquierda a derecha hasta que
+termina y devuelve un string que identifica los nodos existentes con 1 y los faltantes con 0.
 }
 function estructuraNivel(r:tArbol;n:integer;var e:string):string;
 
@@ -128,7 +107,7 @@ begin
 		
 	if (n = 0) then
 	begin
-		if (r^.dato = 0) then
+		if (r^.dato = 'x') then
 			exit (e+'0')
 		else
 			exit (e+'1');
@@ -141,38 +120,40 @@ end;
 
 
 {
-Funcion que calcula el ancho de un nivel dado. Le da el valor 'estructura' a un string y desde 1 hasta la longitud del string se fija
-si en esa posicion hay un 0, si lo hay incrementa un contador, e interrumpe el bucle cuando aparece el primer 1. Luego desde la longitud
-del string hasta 1 se fija si en esa posicion hay un 0 y si hay sigue incrementando el contador, cuando aparece el primer 1 interrumpe.
-Finalmente devuelve 2 elevado al nivel menos el contador. El contador conto la cantidad de nodos inexistentes que hay a la izquerda y a la derecha del
-primer nodo existente en cada lado. Si le restamos ese nro a 2^n (el ancho maximo teorico de un nivel n) obtenemos el ancho del nivel.
+Usa estructura del nivel n para asignar ese valor a un string, y lo recorre de principio a fin hasta que encuentra el primer 1, entonces borra todos
+los caracteres anteriores del string e interrumpe el bucle. Despues invierte el string y repite el mismo procedimiento. Finalmente devuelve la longitud 
+del string resultante, es decir que borro todos los ceros que habia a la izquierda y a la derecha del primer 1 que aparece de cada lado. Asi queda
+un string del largo del ancho del nivel.
 }
 function anchoNivel(r:tArbol;n:integer):integer;
 
 var
-	j,cont:integer;
-	a,est:string;
+	j:integer;
+	aux,est:string;
 
 begin
 	
-	cont:=0;
-	a:=estructuraNivel(r,n,est);
-	for j:=1 to length(a) do
+	aux:=estructuraNivel(r,n,est);
+	for j:=1 to length(aux) do
 	begin
-		if a[j] = '0' then
-			cont:=cont+1
-		else if a[j] = '1' then
+		if aux[j] = '1' then
+		begin
+			delete(aux,1,j-1);
 			break;
-	end;		
-	for j:=length(a) downto 1 do
-	begin
-		if a[j] = '0' then
-			cont:=cont+1
-		else if a[j] = '1' then
-			break;
+		end;		
 	end;
 	
-	anchoNivel:=potencia(2,n)-cont;
+	aux:=reversestring(aux);		
+	for j:=1 to length(aux) do
+	begin
+		if aux[j] = '1' then
+		begin
+			delete(aux,1,j-1);
+			break;
+		end;		
+	end;
+	
+	anchoNivel:=length(aux);
 		
 end;
 
@@ -208,12 +189,12 @@ BEGIN
 	
 	raiz:=nil;
 	rAux:=nil;
-	read(num);
-	while num <> 999 do
+	readln(s);
+	while s <> 'fin' do
 	begin
-		insertar(raiz,num);
-		insertar(rAux,num);
-		read(num);
+		insertar(raiz,s);
+		insertar(rAux,s);
+		readln(s);
 	end;
 	
 	completar(rAux,altArbol(raiz));
