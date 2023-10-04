@@ -17,7 +17,7 @@ var
 
 
 {
-Procedimiento para llenar un arbol, en este caso un arbol binario de busqueda. No advierte si hay valores repetidos asi que hay que evitarlos
+Procedimiento para llenar un arbol, en este caso un arbol binario de busqueda. No advierte si hay valores repetidos, hay que evitarlos
 manualmente. Usa la funcion str to int para poder comparar los numeros asi que hay que cuidarse de escribir enteros correctamente.
 }
 procedure insertar(var r:tArbol;d:string);
