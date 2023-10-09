@@ -1,0 +1,97 @@
+program grafo;
+
+uses
+	sysutils;
+
+type
+	tVertice = 1..12;
+	tAristas = array [1..12,1..12] of integer;
+	tVertices = array[1..12] of tVertice;
+	tGrafo = record
+		vertices:tVertices;
+		aristas:tAristas;
+	end;
+	tArista = record
+		origen,destino:integer;
+	end;
+	tRuta = array [1..12] of tArista;	
+	
+var
+	galaxia:tGrafo;
+	origen:tVertice;
+	ruta:tRuta;
+	i,j:integer;
+	
+
+
+procedure galaxiaVacia(var g:tGrafo);
+
+begin
+
+	for i:=1 to 12 do
+	begin
+		for j:=1 to 12 do
+		begin
+			g.aristas[i,j]:=0;
+		end;
+	end;
+
+end;
+
+
+
+procedure rutaVacia(var r:tRuta);
+
+begin
+
+	for i:=1 to 12 do
+	begin
+		r(i).origen:=999;
+		r(i).destino:=999;
+	end;
+
+end;
+
+
+
+function distancia(g:tGrafo;o:tVertice;var r:tRuta):integer;
+
+var
+	min,c1,c2,rutaMin:integer;
+	
+begin
+	
+	if o = 12 then
+		exit (0);
+	
+	min:=999;
+	for j:=1 to 12 do
+	begin
+		if g.aristas[o,j] <> 0 then
+		begin
+			rutaMin:=distancia(g,j)+g.aristas[o,j];
+			if rutaMin <= min then
+			begin
+				min:=rutaMin;
+				c1:=o;
+				c2:=j;
+			end;	
+		end;		
+	end;
+	
+	if c1 <= r(c2).origen then
+	begin
+		r(c2).origen:=c1;
+		r(c2).destino:=c2;
+	end;	
+	exit (min);
+		
+end;
+	
+	
+	
+begin
+	
+	
+
+end.	
