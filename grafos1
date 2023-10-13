@@ -74,7 +74,7 @@ begin
 
 	for i:=1 to 12 do
 	begin
-		if (r[i].destino <> 999) and (r[i].destino <> r[i-1].destino) then
+		if r[i].destino <> 999 then
 		begin
 			write(r[i].origen,' > ');
 			writeln(r[i].destino);
@@ -88,43 +88,36 @@ end;
 function distancia(g:tGrafo;o:integer;var r:tRuta):integer;
 
 var
-	rutaMin,distanciaActual,k:integer;
-	rutaEncontrada:boolean;
-  
+	min,c1,c2,rutaMin,k:integer;
+	
 begin
-
+	
 	if o = 12 then
-	exit(0);
-
-	rutaMin:=999;
-	rutaEncontrada:=false;
-
+		exit (0);
+	
+	min:=999;
 	for k:=1 to 12 do
 	begin
 		if g.aristas[o,k] <> 0 then
 		begin
-			distanciaActual:=g.aristas[o,k]+distancia(g,k,r);
-			
-			if distanciaActual < rutaMin then
+			rutaMin:=g.aristas[o,k]+distancia(g,k,r);
+			if rutaMin < min then
 			begin
-				rutaMin:=distanciaActual;
-				r[o].origen:=o;
-				r[o].destino:=k;
-				rutaEncontrada:=true;
-			end;
-		end;
+				min:=rutaMin;
+				c1:=o;
+				c2:=k;
+			end;	
+		end;		
 	end;
-
-	if not rutaEncontrada then
+	
+	if c1 <= r[c2].origen then
 	begin
-		r[o].origen:=o;
-		r[o].destino:=-1; 
-	end;
-
-	exit(rutaMin);
-  
+		r[c2].origen:=c1;
+		r[c2].destino:=c2;
+	end;	
+	exit (min);
+		
 end;
-
 	
 	
 	
@@ -150,9 +143,8 @@ begin
 	writeln;
 	write('Ingrese el planeta de origen: ');
 	readln(origen);
-	distancia(galaxia,origen,ruta);
+	
 	writeln;
-	writeln('La ruta mas corta es la siguiente:');
 	mostrarRuta(ruta);
 	
 end.	
