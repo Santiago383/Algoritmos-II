@@ -1,7 +1,5 @@
 program grafo;
 
-uses
-	sysutils;
 
 type
 	tAristas = array [1..12,1..12] of integer;
@@ -10,16 +8,17 @@ type
 		vertices:tVertices;
 		aristas:tAristas;
 	end;
-	tArista = record
-		origen,destino:integer;
-	end;
-	tRuta = array [1..12] of tArista;	
+	tRuta = record
+		ori,des,peso:integer;
+	end;	
+	tRutas = array [1..12,1..12] of tRuta;
+		
 	
 var
 	galaxia:tGrafo;
-	origen:integer;
-	ruta:tRuta;
-	i,j:integer;
+	origen,destino:integer;
+	i,j,aux,min:integer;
+	rutaMasCorta:tRutas;
 	
 
 
@@ -33,89 +32,35 @@ begin
 			g.aristas[i,j]:=0;
 	end;
 
-end;
+end;		
 
 
 
-procedure mostrarGalaxia(g:tGrafo);
-
-begin
-
-	for i:=1 to 12 do
-	begin
-		for j:=1 to 12 do
-		begin
-			write(format('%3d',[g.aristas[i,j]]),' ');
-		end;
-		writeln;	
-	end;	
-
-end;
-
-
-
-procedure rutaVacia(var r:tRuta);
-
-begin
-
-	for i:=1 to 12 do
-	begin
-		r[i].origen:=999;
-		r[i].destino:=999;
-	end;
-
-end;
-
-
-
-procedure mostrarRuta(r:tRuta);
-
-begin
-
-	for i:=1 to 12 do
-	begin
-		if r[i].destino <> 999 then
-		begin
-			write(r[i].origen,' > ');
-			writeln(r[i].destino);
-		end;
-	end;
-
-end;
-
-
-
-function distancia(g:tGrafo;o:integer;var r:tRuta):integer;
+function distancia(g:tGrafo;o,d:integer;var rutaMin:tRutas):integer;
 
 var
-	min,c1,c2,rutaMin,k:integer;
-	
+	distanciaMin,distanciaActual,k:integer;
+
 begin
 	
-	if o = 12 then
-		exit (0);
+	if o = d then
+		exit (0);	
 	
-	min:=999;
-	for k:=1 to 12 do
+	distanciaMin:=maxint;
+	for k:=1 to d do
 	begin
 		if g.aristas[o,k] <> 0 then
 		begin
-			rutaMin:=g.aristas[o,k]+distancia(g,k,r);
-			if rutaMin < min then
-			begin
-				min:=rutaMin;
-				c1:=o;
-				c2:=k;
-			end;	
+			distanciaActual:=g.aristas[o,k]+distancia(g,k,d,rutaMin);
+			rutaMin[k,o].ori:=o;
+			rutaMin[k,o].des:=k;
+			rutaMin[k,o].peso:=distanciaActual;
+			if (distanciaActual < distanciaMin) then
+				distanciaMin:=distanciaActual;
 		end;		
 	end;
 	
-	if c1 <= r[c2].origen then
-	begin
-		r[c2].origen:=c1;
-		r[c2].destino:=c2;
-	end;	
-	exit (min);
+	exit (distanciaMin);
 		
 end;
 	
@@ -136,15 +81,44 @@ begin
 	galaxia.aristas[10,11]:=10;galaxia.aristas[10,12]:=18;
 	galaxia.aristas[11,12]:=7;
 	
-	mostrarGalaxia(galaxia);
-
-	rutaVacia(ruta);
-	
 	writeln;
 	write('Ingrese el planeta de origen: ');
 	readln(origen);
-	distancia(galaxia,origen,ruta);
+	write('Ingrese el planeta de destino: ');
+	readln(destino);
+	distancia(galaxia,origen,destino,rutaMasCorta);
 	writeln;
-	mostrarRuta(ruta);
+	writeln('La ruta mas corta es la suiguiente:');
+	writeln;
 	
+	{for i:=origen to destino do
+	begin
+		for j:=origen to destino do
+		begin
+			if rutaMasCorta[i,j].peso <> 0 then
+			begin
+				writeln(rutaMasCorta[i,j].ori,' ',
+				rutaMasCorta[i,j].des,' ',
+				rutaMasCorta[i,j].peso);
+			end;
+		end;
+	end;}
+	
+	writeln(origen);
+	aux:=0;
+	while origen <> destino do
+	begin
+		min:=maxint;
+		for i:=1 to 12 do
+		begin
+			if (rutaMasCorta[i,origen].peso <> 0) and (rutaMasCorta[i,origen].peso < min) then
+			begin
+				min:=rutaMasCorta[i,origen].peso;
+				aux:=rutaMasCorta[i,origen].des;
+			end;
+		end;
+		writeln(aux);
+		origen:=aux;
+	end;
+		
 end.	
