@@ -42,6 +42,7 @@ end;
 * que apunta la arista en cuestion. El caso base es cuando 'o' es igual a destino.
 * Cada vez que sale de la recursion guarda el peso total de la ruta a
 * la que apunta en la matriz 'ruta', que despues se procesa para obtener la ruta mas corta.}
+
 function distancia(g:tGrafo;o,d:integer;var rutaMin:tAristas):integer;
 
 var
@@ -73,6 +74,7 @@ end;
 * las aristas que salen del origen es el camino mas corto, imprime el
 * vertice y usa ese valor como nuevo origen, asi hasta que llega al
 * destino, ahi corta}
+
 procedure mostrarRuta(o,d:integer;ruta:tAristas);
 
 var
@@ -129,6 +131,7 @@ BEGIN
 	{Este loop es para verificar que la funcion 'distancia' haya guardado
 	* todas las posibles aristas con el peso total desde esa arista hasta
 	* el destino}
+
 	{for i:=origen to destino do
 	begin
 		for j:=origen to destino do
