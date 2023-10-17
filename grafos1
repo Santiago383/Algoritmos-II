@@ -1,9 +1,13 @@
 program grafo;
 
 
+const
+	N = 12;
+
+
 type
-	tAristas = array [1..12,1..12] of integer;
-	tVertices = array[1..12] of integer;
+	tAristas = array [1..N,1..N] of integer;
+	tVertices = array[1..N] of integer;
 	tGrafo = record
 		vertices:tVertices;
 		aristas:tAristas;
@@ -11,14 +15,14 @@ type
 	tRuta = record
 		ori,des,peso:integer;
 	end;	
-	tRutas = array [1..12,1..12] of tRuta;
+	tRutas = array [1..N,1..N] of tRuta;
 		
 	
 var
 	galaxia:tGrafo;
 	origen,destino:integer;
 	i,j,aux,min:integer;
-	rutaMasCorta:tRutas;//matriz para guardar aristas con sus datos
+	rutas:tRutas;//matriz para guardar aristas con sus datos
 	
 
 
@@ -26,9 +30,9 @@ procedure galaxiaVacia(var g:tGrafo);//llena de ceros el grafo
 
 begin
 
-	for i:=1 to 12 do
+	for i:=1 to N do
 	begin
-		for j:=1 to 12 do
+		for j:=1 to N do
 			g.aristas[i,j]:=0;
 	end;
 
@@ -83,7 +87,7 @@ begin
 	galaxia.aristas[6,7]:=8;galaxia.aristas[6,8]:=16;galaxia.aristas[6,9]:=24;
 	galaxia.aristas[7,8]:=11;galaxia.aristas[7,9]:=17;galaxia.aristas[7,10]:=28;galaxia.aristas[7,12]:=42;
 	galaxia.aristas[8,9]:=8;galaxia.aristas[8,10]:=13;
-	galaxia.aristas[9,10]:=9;
+	galaxia.aristas[9,10]:=9;galaxia.aristas[9,11]:=10;
 	galaxia.aristas[10,11]:=10;galaxia.aristas[10,12]:=18;
 	galaxia.aristas[11,12]:=7;//grafo inventado para probar el algoritmo
 	
@@ -92,7 +96,7 @@ begin
 	readln(origen);//usuario elige un punto de origen
 	write('Ingrese el planeta de destino: ');
 	readln(destino);//usuario elige un punto de destino
-	distancia(galaxia,origen,destino,rutaMasCorta);//llamado a la funcion que calcula la ruta mas corta
+	distancia(galaxia,origen,destino,rutas);//llamado a la funcion que calcula la ruta mas corta
 	writeln;
 	writeln('La ruta mas corta es la siguiente:');
 	writeln;
@@ -104,11 +108,11 @@ begin
 	begin
 		for j:=origen to destino do
 		begin
-			if rutaMasCorta[i,j].peso <> 0 then
+			if rutas[i,j].peso <> 0 then
 			begin
-				writeln(rutaMasCorta[i,j].ori,' ',
-				rutaMasCorta[i,j].des,' ',
-				rutaMasCorta[i,j].peso);
+				writeln(rutas[i,j].ori,' ',
+				rutas[i,j].des,' ',
+				rutas[i,j].peso);
 			end;
 		end;
 	end;}
@@ -122,12 +126,12 @@ begin
 	while origen <> destino do
 	begin
 		min:=maxint;
-		for i:=1 to 12 do
+		for i:=1 to N do
 		begin
-			if (rutaMasCorta[i,origen].peso <> 0) and (rutaMasCorta[i,origen].peso < min) then
+			if (rutas[i,origen].peso <> 0) and (rutas[i,origen].peso < min) then
 			begin
-				min:=rutaMasCorta[i,origen].peso;
-				aux:=rutaMasCorta[i,origen].des;
+				min:=rutas[i,origen].peso;
+				aux:=rutas[i,origen].des;
 			end;
 		end;
 		writeln(aux);
