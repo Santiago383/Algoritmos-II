@@ -18,11 +18,11 @@ var
 	galaxia:tGrafo;
 	origen,destino:integer;
 	i,j,aux,min:integer;
-	rutaMasCorta:tRutas;
+	rutaMasCorta:tRutas;//matriz para guardar aristas con sus datos
 	
 
 
-procedure galaxiaVacia(var g:tGrafo);
+procedure galaxiaVacia(var g:tGrafo);//llena de ceros el grafo
 
 begin
 
@@ -35,7 +35,13 @@ begin
 end;		
 
 
-
+{Esta funcion calcula el peso total de la ruta mas corta desde un origen o hasta un destino d.
+* Para un valor de o dado, itera todas las posibles aristas que salen de el y busca la que 
+* conduce por la ruta mas corta sumando su peso al peso total del subgrafo al que apunta,
+* el cual lo calcula llamando recursivamente a 'distancia' con origen igual al vertice al
+* que apunta la arista en cuestion. El caso base es cuando o es igual a destino.
+* Cada vez que sale de la recursion guarda esa arista y el peso total de la ruta a
+* la que apunta en la matriz 'ruta', que despues se procesa para obtener la ruta mas corta.}
 function distancia(g:tGrafo;o,d:integer;var rutaMin:tRutas):integer;
 
 var
@@ -44,9 +50,9 @@ var
 begin
 	
 	if o = d then
-		exit (0);	
+		exit (0);//caso base, si estamos en el destino no hay mas distancia que recorrer	
 	
-	distanciaMin:=maxint;
+	distanciaMin:=maxint;//valor muy grande para iniciar la comparacion
 	for k:=1 to d do
 	begin
 		if g.aristas[o,k] <> 0 then
@@ -79,18 +85,21 @@ begin
 	galaxia.aristas[8,9]:=8;galaxia.aristas[8,10]:=13;
 	galaxia.aristas[9,10]:=9;
 	galaxia.aristas[10,11]:=10;galaxia.aristas[10,12]:=18;
-	galaxia.aristas[11,12]:=7;
+	galaxia.aristas[11,12]:=7;//grafo inventado para probar el algoritmo
 	
 	writeln;
 	write('Ingrese el planeta de origen: ');
-	readln(origen);
+	readln(origen);//usuario elige un punto de origen
 	write('Ingrese el planeta de destino: ');
-	readln(destino);
-	distancia(galaxia,origen,destino,rutaMasCorta);
+	readln(destino);//usuario elige un punto de destino
+	distancia(galaxia,origen,destino,rutaMasCorta);//llamado a la funcion que calcula la ruta mas corta
 	writeln;
-	writeln('La ruta mas corta es la suiguiente:');
+	writeln('La ruta mas corta es la siguiente:');
 	writeln;
 	
+	{Este loop es para verificar que la funcion 'distancia' haya guardado
+	* todas las posibles aristas con el peso total desde esa arista hasta
+	* el destino}
 	{for i:=origen to destino do
 	begin
 		for j:=origen to destino do
@@ -104,6 +113,10 @@ begin
 		end;
 	end;}
 	
+	{Este loop funciona parecido a la funcion 'distancia', se fija cual de
+	* las aristas que salen del origen es el camino mas corto, imprime el
+	* vertice y usa ese valor como nuevo origen, asi hasta que llega al
+	* destino, ahi corta}
 	writeln(origen);
 	aux:=0;
 	while origen <> destino do
