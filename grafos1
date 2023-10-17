@@ -12,17 +12,13 @@ type
 		vertices:tVertices;
 		aristas:tAristas;
 	end;
-	tRuta = record
-		ori,des,peso:integer;
-	end;	
-	tRutas = array [1..N,1..N] of tRuta;
 		
 	
 var
 	galaxia:tGrafo;
 	origen,destino:integer;
-	i,j,aux,min:integer;
-	rutas:tRutas;//matriz para guardar aristas con sus datos
+	i,j:integer;
+	rutas:tAristas;
 	
 
 
@@ -39,14 +35,14 @@ begin
 end;		
 
 
-{Esta funcion calcula el peso total de la ruta mas corta desde un origen o hasta un destino d.
-* Para un valor de o dado, itera todas las posibles aristas que salen de el y busca la que 
+{Esta funcion calcula el peso total de la ruta mas corta desde un origen 'o' hasta un destino 'd'.
+* Para un valor de 'o' dado, itera todas las posibles aristas que salen de el y busca la que 
 * conduce por la ruta mas corta sumando su peso al peso total del subgrafo al que apunta,
 * el cual lo calcula llamando recursivamente a 'distancia' con origen igual al vertice al
-* que apunta la arista en cuestion. El caso base es cuando o es igual a destino.
-* Cada vez que sale de la recursion guarda esa arista y el peso total de la ruta a
+* que apunta la arista en cuestion. El caso base es cuando 'o' es igual a destino.
+* Cada vez que sale de la recursion guarda el peso total de la ruta a
 * la que apunta en la matriz 'ruta', que despues se procesa para obtener la ruta mas corta.}
-function distancia(g:tGrafo;o,d:integer;var rutaMin:tRutas):integer;
+function distancia(g:tGrafo;o,d:integer;var rutaMin:tAristas):integer;
 
 var
 	distanciaMin,distanciaActual,k:integer;
@@ -56,15 +52,13 @@ begin
 	if o = d then
 		exit (0);//caso base, si estamos en el destino no hay mas distancia que recorrer	
 	
-	distanciaMin:=maxint;//valor muy grande para iniciar la comparacion
+	distanciaMin:=maxint;
 	for k:=1 to d do
 	begin
 		if g.aristas[o,k] <> 0 then
 		begin
 			distanciaActual:=g.aristas[o,k]+distancia(g,k,d,rutaMin);
-			rutaMin[k,o].ori:=o;
-			rutaMin[k,o].des:=k;
-			rutaMin[k,o].peso:=distanciaActual;
+			rutaMin[o,k]:=distanciaActual;
 			if (distanciaActual < distanciaMin) then
 				distanciaMin:=distanciaActual;
 		end;		
@@ -73,10 +67,41 @@ begin
 	exit (distanciaMin);
 		
 end;
-	
-	
-	
+
+
+{Este procedimiento funciona parecido a la funcion 'distancia', se fija cual de
+* las aristas que salen del origen es el camino mas corto, imprime el
+* vertice y usa ese valor como nuevo origen, asi hasta que llega al
+* destino, ahi corta}
+procedure mostrarRuta(o,d:integer;ruta:tAristas);
+
+var
+	min,aux,k:integer;
+
 begin
+
+	writeln(o);
+	aux:=0;
+	while o <> d do
+	begin
+		min:=maxint;
+		for k:=1 to N do
+		begin
+			if (ruta[o,k] <> 0) and (ruta[o,k] < min) then
+			begin
+				min:=ruta[o,k];
+				aux:=k;
+			end;
+		end;
+		writeln(aux);
+		o:=aux;
+	end;
+
+end;
+	
+	
+	
+BEGIN
 	
 	galaxiaVacia(galaxia);
 	galaxia.aristas[1,2]:=5;galaxia.aristas[1,3]:=7;galaxia.aristas[1,4]:=12;
@@ -108,34 +133,13 @@ begin
 	begin
 		for j:=origen to destino do
 		begin
-			if rutas[i,j].peso <> 0 then
+			if rutas[i,j] <> 0 then
 			begin
-				writeln(rutas[i,j].ori,' ',
-				rutas[i,j].des,' ',
-				rutas[i,j].peso);
+				writeln(i,' ',j,' ',rutas[i,j]);
 			end;
 		end;
 	end;}
 	
-	{Este loop funciona parecido a la funcion 'distancia', se fija cual de
-	* las aristas que salen del origen es el camino mas corto, imprime el
-	* vertice y usa ese valor como nuevo origen, asi hasta que llega al
-	* destino, ahi corta}
-	writeln(origen);
-	aux:=0;
-	while origen <> destino do
-	begin
-		min:=maxint;
-		for i:=1 to N do
-		begin
-			if (rutas[i,origen].peso <> 0) and (rutas[i,origen].peso < min) then
-			begin
-				min:=rutas[i,origen].peso;
-				aux:=rutas[i,origen].des;
-			end;
-		end;
-		writeln(aux);
-		origen:=aux;
-	end;
+	mostrarRuta(origen,destino,rutas);//muestra la ruta mas corta
 		
-end.	
+END.	
