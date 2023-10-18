@@ -56,7 +56,6 @@ label_list = {1:'Terra', 2:'Ariano', 3:'Soleios', 4:'Rodeon', 5:'Pyron',
 colors = ['firebrick', 'maroon', 'indianred', 'gray', 'royalblue', 'red',
           'green', 'forestgreen', 'sienna', 'slateblue', 'tomato', 'darkcyan']
 
-# bbox=dict(alpha=0)
 edge_labels = {(u, v): G[u][v]["weight"] for (u, v) in G.edges()}
 fig, ax = plt.subplots()
 ax.set_facecolor('midnightblue')
