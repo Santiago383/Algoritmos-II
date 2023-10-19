@@ -2,34 +2,53 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 def dijkstra(graph, ini, fin):
+    # Diccionario para guardar la distancia acumulada de cada ruta tentativa en cada nodo
     distancias = {node: float('inf') for node in graph.nodes()}
+    # Diccionario para guardar el antecesor tentativo de cada nodo
     antecesores = {node: None for node in graph.nodes()}
+    # Lista de no visitados, inicialmente la carga con todos los nodos del grafo
     no_visitados = list(graph.nodes())
+    # Da valor 0 al nodo origen en el diccionario distancias (inicialmente todos tienen valor infinito)
     distancias[ini] = 0
 
+    # Mientras haya elementos en la lista de no visitados:
     while no_visitados:
+        # Mira en la lista de no visitados, y selecciona el menor, en base a su valor en el diccionario 'distancias'
         nodo_actual = min(no_visitados, key=lambda node: distancias[node])
+        # Saca al nodo actual de no visitados
         no_visitados.remove(nodo_actual)
 
+        # Si el nodo actual es igual al nodo de destino que ingreso el usuario, se interrumpe el ciclo
         if nodo_actual == fin:
             break
 
+        # Por cada uno de los vecinos del nodo actual (los nodos con los cuales el nodo actual esta conectado):
         for neighbor in graph.neighbors(nodo_actual):
             peso_arco = graph[nodo_actual][neighbor]["weight"]
+            # En la var distancia actual guarda la distancia del nodo actual mas el peso del arco
             distancia_actual = distancias[nodo_actual] + peso_arco
 
+            # Si distancia actual es menor que la distancia del vecino que estamos evaluando, actualiza la distancia
+            # con distancia actual. Además guarda el nodo actual como antecesor del vecino.
             if distancia_actual < distancias[neighbor]:
                 distancias[neighbor] = distancia_actual
                 antecesores[neighbor] = nodo_actual
 
+    # Crea una lista para guardar la ruta
     ruta_mas_corta = []
+    # Mientras 'fin' no sea nulo
     while fin is not None:
+        # Agrega 'fin' al principio en la lista ruta mas corta
         ruta_mas_corta.insert(0, fin)
+        # Actualiza 'fin' con su antecesor. Cuando el antecesor sea el nodo origen, el ciclo termina porque el antecesor
+        # del nodo origen es nulo (la función nunca lo evaluó como vecino de nadie por eso nunca actualizó su antecesor,
+        # que lo había inicializado como nulo)
         fin = antecesores[fin]
 
+    # Devuelve la ruta más corta, en el orden correcto
     return ruta_mas_corta
 
-
+# Crea un grafo con una lista de tuplas (nodo,nodo,peso) que indican los arcos y sus pesos
 G = nx.DiGraph()
 
 edges = [(1, 2, 5), (1, 3, 8), (1, 4, 15),
@@ -46,6 +65,7 @@ edges = [(1, 2, 5), (1, 3, 8), (1, 4, 15),
 
 G.add_weighted_edges_from(edges)
 
+# Define varias características para que el grafo quede visualmente estético
 pos = {1: (-1.08,0.78), 2: (-0.78,0.77), 3: (-0.67,0.48),
         4: (-0.79,0.05), 5: (-0.58,-0.17), 6: (-0.08,0.07),
         7: (0.10,-0.19), 8: (0.51,-0.25), 9: (0.97,-0.06),
@@ -69,16 +89,23 @@ nx.draw_networkx_nodes(G, pos, node_size=sizes, node_color=colors)
 nx.draw_networkx_edges(G, pos, edgelist=G.edges(), edge_color='gainsboro', node_size=750)
 nx.draw_networkx_labels(G, pos, labels=label_list, verticalalignment='bottom', font_color='whitesmoke', font_size=10)
 nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8, font_color='whitesmoke', bbox=dict(color='midnightblue'))
+# Muesta el grafo al usuario
 plt.show()
 
-print("Terra(1)/Ariano(2)/Soleios(3)/Rodeon(4)/Pyron(5)/Ignasea(6)/Chelestra(7)/Josaia(8)/Mikheil(9)/Abarrach(10)/Helraios(11)/Dycroft(12)")
+# Pide al usuario un planeta de origen y destino
+print("Terra(1)/Ariano(2)/Soleios(3)/Rodeon(4)/Pyron(5)/Ignasea(6)/Chelestra(7)/"
+      "Josaia(8)/Mikheil(9)/Abarrach(10)/Helraios(11)/Dycroft(12)")
 origen = int(input("Ingrese el código del planeta de origen: "))
 destino = int(input("Ingrese el código del planeta de destino: "))
 
+# Usa la función dijkstra para crear una lista con los nodos que conforman la ruta mas corta
 ruta_mas_corta = dijkstra(G, origen, destino)
 
+# Con cada nodo en 'ruta más corta' y su siguiente (salvo el último) arma arcos y los guarda en una lista de tuplas
 mapa_ruta_mas_corta = [(ruta_mas_corta[i], ruta_mas_corta[i+1]) for i in range(len(ruta_mas_corta) - 1)]
 
+# Crea una lista de colores para que networkx sepa como pintar los arcos. Si un arco del grafo no esta en
+# 'mapa ruta mas corta', lo pinta de blanco, si está lo pinta de rojo
 edge_colors = ['gainsboro' if edge not in mapa_ruta_mas_corta else 'red' for edge in G.edges()]
 
 fig, ax = plt.subplots()
@@ -87,4 +114,5 @@ nx.draw_networkx_nodes(G, pos, node_size=sizes, node_color=colors)
 nx.draw_networkx_edges(G, pos, edgelist=G.edges(), edge_color=edge_colors, node_size=750)
 nx.draw_networkx_labels(G, pos, labels=label_list, verticalalignment='bottom', font_color='whitesmoke', font_size=10)
 nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8, font_color='whitesmoke', bbox=dict(color='midnightblue'))
+# Muestra el mapa de la galaxia con los arcos de la ruta mas corta resaltados en rojo
 plt.show()
