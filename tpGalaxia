@@ -113,6 +113,6 @@ nx.draw_networkx_edges(G, pos, edgelist=list(G.edges()), edge_color='gainsboro',
 nx.draw_networkx_edges(G, pos, edgelist=list(mapa_ruta_mas_corta), edge_color='red', node_size=750)
 nx.draw_networkx_labels(G, pos, labels=label_list, verticalalignment='bottom', font_color='whitesmoke', font_size=10)
 nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8, font_color='whitesmoke', bbox=dict(color='midnightblue'))
-plt.title('Ruta más rápida desde ' + label_list[origen] + ' hasta ' + label_list[destino])
+plt.title('Ruta más rápida de ' + label_list[origen] + ' a ' + label_list[destino])
 # Muestra el mapa de la galaxia con los arcos de la ruta mas corta resaltados en rojo
 plt.show()
