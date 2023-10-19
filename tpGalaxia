@@ -104,14 +104,12 @@ ruta_mas_corta = dijkstra(G, origen, destino)
 # Con cada nodo en 'ruta más corta' y su siguiente (salvo el último) arma arcos y los guarda en una lista de tuplas
 mapa_ruta_mas_corta = [(ruta_mas_corta[i], ruta_mas_corta[i+1]) for i in range(len(ruta_mas_corta) - 1)]
 
-# Crea una lista de colores para que networkx sepa como pintar los arcos. Si un arco del grafo no esta en
-# 'mapa ruta mas corta', lo pinta de blanco, si está lo pinta de rojo
-edge_colors = ['gainsboro' if edge not in mapa_ruta_mas_corta else 'red' for edge in G.edges()]
-
 fig, ax = plt.subplots()
 ax.set_facecolor('midnightblue')
 nx.draw_networkx_nodes(G, pos, node_size=sizes, node_color=colors)
-nx.draw_networkx_edges(G, pos, edgelist=list(G.edges()), edge_color=edge_colors, node_size=750)
+nx.draw_networkx_edges(G, pos, edgelist=list(G.edges()), edge_color='gainsboro', node_size=750)
+# Pinta de rojo solo los arcos de la ruta mas corta
+nx.draw_networkx_edges(G, pos, edgelist=list(mapa_ruta_mas_corta), edge_color='red', node_size=750)
 nx.draw_networkx_labels(G, pos, labels=label_list, verticalalignment='bottom', font_color='whitesmoke', font_size=10)
 nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8, font_color='whitesmoke', bbox=dict(color='midnightblue'))
 # Muestra el mapa de la galaxia con los arcos de la ruta mas corta resaltados en rojo
