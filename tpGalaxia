@@ -1,19 +1,55 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 
+def dijkstra_shortest_path(graph, start, end):
+    # Initialize distances and predecessor dictionaries
+    distances = {node: float('inf') for node in graph.nodes()}
+    predecessors = {node: None for node in graph.nodes()}
+    distances[start] = 0
+
+    # Create a list of unvisited nodes
+    unvisited_nodes = list(graph.nodes())
+
+    while unvisited_nodes:
+        # Find the node with the smallest distance
+        current_node = min(unvisited_nodes, key=lambda node: distances[node])
+        unvisited_nodes.remove(current_node)
+
+        if current_node == end:
+            break
+
+        for neighbor in graph.neighbors(current_node):
+            edge_weight = graph[current_node][neighbor]["weight"]
+            potential_distance = distances[current_node] + edge_weight
+
+            if potential_distance < distances[neighbor]:
+                distances[neighbor] = potential_distance
+                predecessors[neighbor] = current_node
+
+    # Build the shortest path from start to end
+    shortest_path = []
+    while end is not None:
+        shortest_path.insert(0, end)
+        end = predecessors[end]
+
+    return shortest_path
+
+
 G = nx.DiGraph()
 
-edges = [(1,2,5),(1,3,8),(1,4,15),
-         (2,3,4),(2,4,9),
-         (3,4,6),(3,6,25),
-         (4,5,5),(4,6,12),
-         (5,6,6),(5,7,13),
-         (6,7,6),(6,8,13),(6,10,56),
-         (7,8,8),
-         (8,9,10),(8,10,19),(8,11,28),
-         (9,10,10),(9,11,15),
-         (10,11,6),(10,12,18),
+edges = [(1,2,5), (1,3,8), (1,4,15),
+         (2, 3, 4), (2, 4, 9),
+         (3, 4, 6), (3, 6, 25),
+         (4, 5, 5), (4, 6, 12),
+         (5, 6, 6), (5, 7, 13),
+         (6, 7, 6), (6, 8, 13), (6, 10, 56),
+         (7, 8, 8),
+         (8, 9, 10), (8, 10, 19), (8, 11, 28),
+         (9, 10, 10), (9, 11, 15),
+         (10, 11, 6), (10, 12, 18),
          (11,12,9)]
+
+G.add_weighted_edges_from(edges)
 
 pos = {1: (-1.08,0.78), 2: (-0.78,0.78), 3: (-0.67,0.48),
         4: (-0.79,0.05), 5: (-0.58,-0.17), 6: (-0.08,0.07),
@@ -30,15 +66,29 @@ label_list = {1:'Terra', 2:'Ariano', 3:'Soleios', 4:'Rodeon', 5:'Pyron',
 colors = ['royalblue', 'indianred', 'sienna', 'gray', 'slateblue', 'red',
           'dodgerblue', 'forestgreen', 'maroon', 'firebrick', 'tomato', 'darkcyan']
 
-G.add_weighted_edges_from(edges)
-
 edge_labels = {(u, v): G[u][v]["weight"] for (u, v) in G.edges()}
+
+
+
+origin = int(input("Enter the origin node: "))
+destination = int(input("Enter the destination node: "))
+
+shortest_path = dijkstra_shortest_path(G, origin, destination)
+
+# Extract the edges in the shortest path
+edges_in_shortest_path = [(shortest_path[i], shortest_path[i+1]) for i in range(len(shortest_path) - 1)]
+
+# Create edge colors, highlighting the shortest path in red
+edge_colors = ['gainsboro' if edge not in edges_in_shortest_path else 'red' for edge in G.edges()]
+
 fig, ax = plt.subplots()
 ax.set_facecolor('midnightblue')
 nx.draw_networkx_nodes(G, pos, node_size=sizes, node_color=colors)
-nx.draw_networkx_edges(G, pos, edgelist=G.edges(), edge_color='gainsboro', node_size=750)
-nx.draw_networkx_labels(G, pos, labels=label_list, verticalalignment='bottom',
-                        font_color='whitesmoke', font_size=10)
-nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8, font_color='whitesmoke',
-                             bbox=dict(color='midnightblue'))
+nx.draw_networkx_edges(G, pos, edgelist=G.edges(), edge_color=edge_colors, node_size=750)
+nx.draw_networkx_labels(G, pos, labels=label_list, verticalalignment='bottom', font_color='whitesmoke', font_size=10)
+nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8, font_color='whitesmoke', bbox=dict(color='midnightblue'))
+
+# Show the graph with the highlighted shortest path
 plt.show()
+
+
