@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 def dijkstra(graph, ini, fin):
     distancias = {node: float('inf') for node in graph.nodes()}
     antecesores = {node: None for node in graph.nodes()}
-    distancias[ini] = 0
     no_visitados = list(graph.nodes())
+    distancias[ini] = 0
 
     while no_visitados:
         nodo_actual = min(no_visitados, key=lambda node: distancias[node])
