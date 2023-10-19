@@ -5,7 +5,6 @@ def dijkstra(graph, ini, fin):
     distancias = {node: float('inf') for node in graph.nodes()}
     antecesores = {node: None for node in graph.nodes()}
     distancias[ini] = 0
-
     no_visitados = list(graph.nodes())
 
     while no_visitados:
@@ -16,8 +15,8 @@ def dijkstra(graph, ini, fin):
             break
 
         for neighbor in graph.neighbors(nodo_actual):
-            peso_arista = graph[nodo_actual][neighbor]["weight"]
-            distancia_actual = distancias[nodo_actual] + peso_arista
+            peso_arco = graph[nodo_actual][neighbor]["weight"]
+            distancia_actual = distancias[nodo_actual] + peso_arco
 
             if distancia_actual < distancias[neighbor]:
                 distancias[neighbor] = distancia_actual
