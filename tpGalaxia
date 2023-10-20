@@ -86,6 +86,7 @@ colors = ['royalblue', 'indianred', 'sienna', 'gray', 'slateblue', 'red',
 edge_labels = {(u, v): G[u][v]["weight"] for (u, v) in G.edges()}
 
 fig, ax = plt.subplots()
+fig.set_facecolor('whitesmoke')
 ax.set_facecolor('midnightblue')
 nx.draw_networkx_nodes(G, pos, node_size=sizes, node_color=colors)
 nx.draw_networkx_edges(G, pos, edgelist=list(G.edges()), edge_color='gainsboro', node_size=750)
@@ -109,6 +110,7 @@ ruta_mas_corta = dijkstra(G, origen, destino)
 mapa_ruta_mas_corta = [(ruta_mas_corta[i], ruta_mas_corta[i+1]) for i in range(len(ruta_mas_corta) - 1)]
 
 fig, ax = plt.subplots()
+fig.set_facecolor('whitesmoke')
 ax.set_facecolor('midnightblue')
 nx.draw_networkx_nodes(G, pos, node_size=sizes, node_color=colors)
 nx.draw_networkx_edges(G, pos, edgelist=list(G.edges()), edge_color='gainsboro', node_size=750)
