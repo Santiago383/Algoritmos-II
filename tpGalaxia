@@ -36,18 +36,18 @@ def dijkstra(graph, ini, fin):
                 antecesores[neighbor] = nodo_actual
 
     # Crea una lista para guardar la ruta
-    ruta_mas_corta = []
+    ruta_mas_rapida = []
     # Mientras 'fin' no sea nulo
     while fin is not None:
-        # Agrega 'fin' al principio en la lista ruta mas corta
-        ruta_mas_corta.insert(0, fin)
+        # Agrega 'fin' al principio en la lista 'ruta mas rapida'
+        ruta_mas_rapida.insert(0, fin)
         # Actualiza 'fin' con su antecesor. Cuando el antecesor sea el del nodo origen, el ciclo termina porque el
         # antecesor del nodo origen es nulo (la función nunca lo evaluó como vecino de nadie por eso nunca actualizó su
         # antecesor, que estaba inicializado como nulo)
         fin = antecesores[fin]
 
-    # Devuelve la ruta más corta, en el orden correcto
-    return ruta_mas_corta
+    # Devuelve la ruta, en el orden correcto
+    return ruta_mas_rapida
 
 
 # Crea un grafo con una lista de tuplas (nodo,nodo,peso) que indican los arcos y sus pesos
@@ -90,7 +90,8 @@ ax.set_facecolor('midnightblue')
 nx.draw_networkx_nodes(G, pos, node_size=sizes, node_color=colors)
 nx.draw_networkx_edges(G, pos, edgelist=list(G.edges()), edge_color='gainsboro', node_size=750)
 nx.draw_networkx_labels(G, pos, labels=label_list, verticalalignment='bottom', font_color='whitesmoke', font_size=10)
-nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8, font_color='whitesmoke', bbox=dict(color='midnightblue'))
+nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8, font_color='whitesmoke',
+                             bbox=dict(color='midnightblue'))
 plt.title('Mapa de la Galaxia')
 # Muestra el grafo al usuario
 plt.show()
@@ -114,7 +115,8 @@ nx.draw_networkx_edges(G, pos, edgelist=list(G.edges()), edge_color='gainsboro',
 # Pinta de rojo solo los arcos de la ruta mas corta
 nx.draw_networkx_edges(G, pos, edgelist=list(mapa_ruta_mas_corta), edge_color='red', node_size=750)
 nx.draw_networkx_labels(G, pos, labels=label_list, verticalalignment='bottom', font_color='whitesmoke', font_size=10)
-nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8, font_color='whitesmoke', bbox=dict(color='midnightblue'))
+nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8, font_color='whitesmoke',
+                             bbox=dict(color='midnightblue'))
 plt.title('Ruta más rápida de ' + label_list[origen] + ' a ' + label_list[destino])
 # Muestra el mapa de la galaxia con los arcos de la ruta mas corta resaltados en rojo
 plt.show()
