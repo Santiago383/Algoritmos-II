@@ -40,7 +40,7 @@ def dijkstra(graph, ini, fin):
     while fin is not None:
         # Agrega 'fin' al principio en la lista ruta mas corta
         ruta_mas_corta.insert(0, fin)
-        # Actualiza 'fin' con su antecesor. Cuando el antecesor sea el nodo origen, el ciclo termina porque el antecesor
+        # Actualiza 'fin' con su antecesor. Cuando el antecesor sea el del nodo origen, el ciclo termina porque el antecesor
         # del nodo origen es nulo (la función nunca lo evaluó como vecino de nadie por eso nunca actualizó su antecesor,
         # que lo había inicializado como nulo)
         fin = antecesores[fin]
