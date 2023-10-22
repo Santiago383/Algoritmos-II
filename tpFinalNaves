@@ -4,14 +4,21 @@ import math
 import random
 
 
+# Abre una archivo txt que tiene en cada renglón los dos nodos que conforman cada arco, y su peso (ej: 1 2 6)
 def cargar_datos_grafo(graph):
 
     with open('C:/Users/Usuario/Desktop/ucalp1/Algo2/tpGrafos/datosGrafo.txt', 'r') as file:
         for line in file:
+            # Por cada linea en el archivo, strip() borra los espacios en blanco que haya
+            # antes y despues del string. Split() corta el string cada vez que encuentra un
+            # espacio en blanco. Asi se obtienen tres strings que se guardan en u, v (los nodos) y weight
             u, v, weight = map(int, line.strip().split())
+            # Despues con add_edge se agrega el arco con su peso al grafo
             graph.add_edge(u, v, weight=weight)
 
 
+# Dibuja el grafo. Recibe una lista de arcos que está vacía si la ruta todavía no esta calculada. Si está vacía
+# quedan todos los arcos blancos, si no pinta solo esos arcos de rojo.
 def dibujar_galaxia(gr, arcos, pos, sizes, label_list, colors, title):
 
     edge_labels = {(u, v): gr[u][v]["weight"] for (u, v) in gr.edges()}
@@ -29,9 +36,14 @@ def dibujar_galaxia(gr, arcos, pos, sizes, label_list, colors, title):
     plt.show()
 
 
+# Toma el tipo de nave y el nivel de carga elegidos y en base a la capacidad de carga maxima de la nave
+# calcula cuanta carga lleva.
 def calcular_carga(ship, load):
     carga = 0
 
+    # Las naves estan guardadas en un diccionario de enteros(nave):diccionarios(caracteristicas)
+    # Las caracteristicas son un diccionario de strings(caracteristica):enteros(valor). Esta funcion recibe una
+    # nave por eso con la funcion get(caracteristica) podemos acceder al valor de la caracteristica
     if ship.get('capacity') == 1:
         carga = int(70 * load / 100)
     elif ship.get('capacity') == 2:
@@ -42,8 +54,11 @@ def calcular_carga(ship, load):
     return carga
 
 
-def speed_updates(graph, ship, load):
+def actualizar_velocidad(graph, ship, load):
 
+    # u, v, data permite acceder al peso de cada arco del grafo. Los pesos se incrementan en un porcentaje
+    # basado en la velocidad de la nave y la carga que lleva. Como una modificacion basada en porcentaje afecta mas
+    # a los numeros mas grandes, a los pesos mas bajos se les aplica un mayor porcentaje
     for u, v, data in graph.edges(data=True):
         if ship.get('speed') == 3:
             if data['weight'] < 11:
@@ -62,54 +77,58 @@ def speed_updates(graph, ship, load):
                 data['weight'] += int(data['weight'] * (load - 50) / 100)
 
 
-def event_updates(graph, ship, event_code, affected_node):
+def actualizar_evento(graph, ship, event_code, affected_node):
 
+    # Se incrementan los pesos arbitrariamente para representar eventualidades. Las caracteristicas
+    # de la nave pueden hacer que los incrementos sean mayores o menores
     if event_code == 1:
         if ship.get('weapons') == 1:
             for u, v, data in graph.edges(data=True):
                 if u == affected_node or v == affected_node:
-                    data['weight'] += 8
+                    data['weight'] += 12
         elif ship.get('weapons') == 2:
             for u, v, data in graph.edges(data=True):
                 if u == affected_node or v == affected_node:
-                    data['weight'] += 5
+                    data['weight'] += 8
     elif event_code == 2:
         if ship.get('armor') == 1:
             for u, v, data in graph.edges(data=True):
                 if u == affected_node or v == affected_node:
-                    data['weight'] += 12
+                    data['weight'] += 18
         elif ship.get('armor') == 2:
             for u, v, data in graph.edges(data=True):
                 if u == affected_node or v == affected_node:
-                    data['weight'] += 8
+                    data['weight'] += 12
     elif event_code == 3:
         if ship.get('weapons') == 1:
             for u, v, data in graph.edges(data=True):
                 if u == affected_node or v == affected_node:
-                    data['weight'] += 10
+                    data['weight'] += 15
         elif ship.get('weapons') == 2:
             for u, v, data in graph.edges(data=True):
                 if u == affected_node or v == affected_node:
-                    data['weight'] += 7
+                    data['weight'] += 10
     elif event_code == 4:
         for u, v, data in graph.edges(data=True):
             if u == affected_node or v == affected_node:
-                data['weight'] += 10
+                data['weight'] += 12
     elif event_code == 5:
         graph[6][10]['weight'] = 1
     elif event_code == 6:
         if ship.get('armor') == 1:
             for u, v, data in graph.edges(data=True):
                 if u == affected_node or v == affected_node:
-                    data['weight'] += 15
+                    data['weight'] += 18
         elif ship.get('armor') == 2:
             for u, v, data in graph.edges(data=True):
                 if u == affected_node or v == affected_node:
-                    data['weight'] += 10
+                    data['weight'] += 12
 
 
 def hyper_jump(graph, ship, load, affected_node):
 
+    # reduccion arbitraria de ciertos pesos para representar algo que suena como de serie sci fi
+    # la reduccion es menos pronunciada si la nave lleva mas peso
     for u, v, data in graph.edges(data=True):
         if ship.get('speed') == 3 and u != affected_node and v != affected_node:
             if data['weight'] >= 25:
@@ -164,6 +183,7 @@ def dijkstra(graph, ini, fin):
     return ruta_mas_rapida
 
 
+# Suma los pesos de todos los arcos del camino mas corto
 def peso_ruta(graph, path):
     peso_acumulado = 0
 
@@ -173,7 +193,7 @@ def peso_ruta(graph, path):
     return peso_acumulado
 
 
-# Crea un grafo con una lista de nodos, y lee los arcos y los pesos de un archivo
+# Crea un grafo con una lista de nodos, y una lista de tuplas (nodo,nodo,peso) que indican los arcos y sus pesos
 G = nx.DiGraph()
 
 nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
@@ -182,76 +202,81 @@ G.add_nodes_from(nodes)
 
 cargar_datos_grafo(G)
 
-pos = {1: (-1.08, 0.78), 2: (-0.69, 0.76), 3: (-0.57, 0.49),
-       4: (-0.95, 0.10), 5: (-0.58, -0.17), 6: (-0.08, 0.07),
-       7: (0.10, -0.19), 8: (0.51, -0.25), 9: (0.97, -0.06),
-       10: (0.74, 0.34), 11: (1.03, 0.47), 12: (1.02, 0.74)}
+posicion = {1: (-1.08, 0.78), 2: (-0.69, 0.76), 3: (-0.57, 0.49),
+            4: (-0.95, 0.10), 5: (-0.58, -0.17), 6: (-0.08, 0.07),
+            7: (0.10, -0.19), 8: (0.51, -0.25), 9: (0.97, -0.06),
+            10: (0.74, 0.34), 11: (1.03, 0.47), 12: (1.02, 0.74)}
 
-sizes = [250, 250, 310, 350, 330, 650,
-         320, 350, 240, 260, 250, 460]
+diametros = [250, 250, 310, 350, 330, 650,
+             320, 350, 240, 260, 250, 460]
 
-label_list = {1: 'Terra', 2: 'Ariano', 3: 'Soleios', 4: 'Rodeon', 5: 'Pyron',
-              6: 'Ignasea', 7: 'Chelestra', 8: 'Josaia', 9: 'Mikheil',
-              10: 'Abarrach', 11: 'Helraios', 12: 'Dycroft'}
+etiquetas = {1: 'Terra', 2: 'Ariano', 3: 'Soleios', 4: 'Rodeon', 5: 'Pyron',
+             6: 'Ignasea', 7: 'Chelestra', 8: 'Josaia', 9: 'Mikheil',
+             10: 'Abarrach', 11: 'Helraios', 12: 'Dycroft'}
 
-colors = ['royalblue', 'indianred', 'forestgreen', 'gray', 'red', 'slateblue',
-          'dodgerblue', 'sienna', 'firebrick', 'maroon', 'tomato', 'darkcyan']
+colores = ['royalblue', 'indianred', 'forestgreen', 'gray', 'red', 'slateblue',
+           'dodgerblue', 'sienna', 'firebrick', 'maroon', 'tomato', 'darkcyan']
 
 mapa_ruta_mas_corta = []
 
 titulo = 'Mapa de la Galaxia'
-dibujar_galaxia(G, mapa_ruta_mas_corta, pos, sizes, label_list, colors, titulo)
+dibujar_galaxia(G, mapa_ruta_mas_corta, posicion, diametros, etiquetas, colores, titulo)
 
-spaceships = {1: {'speed': 3, 'capacity': 1, 'weapons': 1, 'armor': 1},
-              2: {'speed': 1, 'capacity': 3, 'weapons': 2, 'armor': 2},
-              3: {'speed': 2, 'capacity': 2, 'weapons': 3, 'armor': 3}}
+# Guarda las naves en un diccionario. En el cada nave tiene como valor su propio diccionario con sus caracteristicas
+naves = {1: {'speed': 3, 'capacity': 1, 'weapons': 1, 'armor': 1},
+         2: {'speed': 1, 'capacity': 3, 'weapons': 2, 'armor': 2},
+         3: {'speed': 2, 'capacity': 2, 'weapons': 3, 'armor': 3}}
 
 print('Seleccione una nave')
 print('Crucero (Velocidad: Alta/Hipersalto, Carga: Ligera, Armamento: Ligero, Armadura: Ligera)')
 print('Carguero (Velocidad: Baja, Carga: Pesada, Armamento: Intermedio, Armadura: Intermedia)')
 print('Destructor (Velocidad: Intermedia, Carga: Intermedia, Armamento: Pesado, Armadura: Pesada)')
-spaceship = int(input('Crucero(1)/Carguero(2)/Destructor(3): '))
+nave = int(input('Crucero(1)/Carguero(2)/Destructor(3): '))
 
-chosen_ship = spaceships.get(spaceship)
+# Se guarda la nave elegida por el usuario en un diccionario (las naves individuales son diccionarios)
+nave_elegida = naves.get(nave)
 
 print('Ingrese la cantidad de mercancía que desea llevar')
 porcentaje = int(input('(Ingrese un valor entre 50 -carga mínima- y 100 -carga máxima-): '))
 
-cargamento = calcular_carga(chosen_ship, porcentaje)
+cargamento = calcular_carga(nave_elegida, porcentaje)
 
+# Evento especial y el nodo donde sucede (incompleto)
 print()
 random_event = random.randint(1, 7)
 random_node = random.randint(1, 12)
 
 if random_event == 1:
-    print('Piratas espaciales patrullan ' + label_list[random_node] + '. (Las naves con armamento insuficiente para '
+    print('Piratas espaciales patrullan ' + etiquetas[random_node] + '. (Las naves con armamento insuficiente para '
           'destruirlos deben reducir la velocidad ')
     print('para eludir sus radares y evitarlos)')
 elif random_event == 2:
-    print('Tormenta de asteroides en ' + label_list[random_node] + '. (Las naves con armadura insuficiente deben '
+    print('Tormenta de asteroides en ' + etiquetas[random_node] + '. (Las naves con armadura insuficiente deben '
           'reducir la velocidad para esquivarlos)')
 elif random_event == 3:
-    print('Rebeldes tienen ' + label_list[random_node] + ' sitiado. (Las naves con armamento insuficiente para '
+    print('Rebeldes tienen ' + etiquetas[random_node] + ' sitiado. (Las naves con armamento insuficiente para '
           'destruirlos deben reducir la velocidad para ')
     print('eludir sus radares y evitarlos)')
 elif random_event == 4:
-    print('Anomalía gravitacional alrededor de ' + label_list[random_node] + '. (La velocidad de la nave se reduce '
+    print('Anomalía gravitacional alrededor de ' + etiquetas[random_node] + '. (La velocidad de la nave se reduce '
           'significativamente)')
 elif random_event == 5:
     print('Un agujero negro entre la Puerta Intergaláctica Ignasea y el mundo de roca Abarrach permite '
           'realizar la ruta en 1 pársec.')
 elif random_event == 6:
-    print('Estalla una supernova cerca de ' + label_list[random_node] + '. (Las naves con armadura insuficiente '
+    print('Estalla una supernova cerca de ' + etiquetas[random_node] + '. (Las naves con armadura insuficiente '
           'deben reducir la velocidad para hacer reparaciones)')
 elif random_event == 7:
-    print('Anomalía gravitacional alrededor de ' + label_list[random_node] + ' (Impide usar hipersalto)')
+    print('Anomalía gravitacional alrededor de ' + etiquetas[random_node] + ' (Impide usar hipersalto)')
 
-speed_updates(G, chosen_ship, cargamento)
-event_updates(G, chosen_ship, random_event, random_node)
-hyper_jump(G, chosen_ship, cargamento, random_node)
+# Se actualizan los pesos del grafo
+actualizar_velocidad(G, nave_elegida, cargamento)
+actualizar_evento(G, nave_elegida, random_event, random_node)
+hyper_jump(G, nave_elegida, cargamento, random_node)
 
+# Se muestra la ruta tal como la puede recorrer el usuario
 titulo = 'Ruta actualizada segun nave/carga/imponderables'
-dibujar_galaxia(G, mapa_ruta_mas_corta, pos, sizes, label_list, colors, titulo)
+dibujar_galaxia(G, mapa_ruta_mas_corta, posicion, diametros, etiquetas, colores, titulo)
 
 print()
 # Pide al usuario un planeta de origen y destino
@@ -266,6 +291,7 @@ ruta_mas_corta = dijkstra(G, origen, destino)
 # Con cada nodo en 'ruta más corta' y su siguiente (salvo el último) arma arcos y los guarda en una lista de tuplas
 mapa_ruta_mas_corta = [(ruta_mas_corta[i], ruta_mas_corta[i+1]) for i in range(len(ruta_mas_corta) - 1)]
 
+# Se inventan algunos gastos para devolver un resultado y que el programa funcione como un mini juego
 distancia_recorrida = peso_ruta(G, ruta_mas_corta)
 peajes = (destino - origen) * 130
 combustible = (destino - origen) * 240
@@ -277,5 +303,5 @@ print(f'Su recompensa es de {recompensa} créditos')
 ganancia_neta = recompensa - peajes - combustible
 print(f'Descontando peajes y combustible le quedan {ganancia_neta} créditos')
 
-titulo = 'Ruta más rápida de ' + label_list[origen] + ' a ' + label_list[destino]
-dibujar_galaxia(G, mapa_ruta_mas_corta, pos, sizes, label_list, colors, titulo)
+titulo = 'Ruta más rápida de ' + etiquetas[origen] + ' a ' + etiquetas[destino]
+dibujar_galaxia(G, mapa_ruta_mas_corta, posicion, diametros, etiquetas, colores, titulo)
