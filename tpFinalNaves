@@ -21,11 +21,20 @@ def speed_updates(graph, ship, load):
 
     for u, v, data in graph.edges(data=True):
         if ship.get('speed') == 3:
-            data['weight'] += int(data['weight'] * (load - 35) / 100)
+            if data['weight'] < 11:
+                data['weight'] += int(data['weight'] * (load - 25) / 100)
+            elif 11 <= data['weight'] < 25:
+                data['weight'] += int(data['weight'] * (load - 35) / 100)
         elif ship.get('speed') == 2:
-            data['weight'] += int(data['weight'] * (load - 42) / 100)
+            if data['weight'] < 11:
+                data['weight'] += int(data['weight'] * (load - 30) / 100)
+            else:
+                data['weight'] += int(data['weight'] * (load - 42) / 100)
         elif ship.get('speed') == 1:
-            data['weight'] += int(data['weight'] * (load - 50) / 100)
+            if data['weight'] < 11:
+                data['weight'] += int(data['weight'] * (load - 35) / 100)
+            else:
+                data['weight'] += int(data['weight'] * (load - 50) / 100)
 
 
 def event_updates(graph, ship, event_code, affected_node):
@@ -126,7 +135,7 @@ def dijkstra(graph, ini, fin):
         # antecesor, que estaba inicializado como nulo)
         fin = antecesores[fin]
 
-    # Devuelve la ruta, en el orden correcto
+    # Devuelve la ruta en el orden correcto
     return ruta_mas_rapida
 
 
@@ -146,9 +155,9 @@ nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 G.add_nodes_from(nodes)
 
-edges = [(1, 2, 5), (1, 3, 10), (1, 4, 17),
-         (2, 3, 4), (2, 4, 12),
-         (3, 4, 6), (3, 6, 27),
+edges = [(1, 2, 6), (1, 3, 10), (1, 4, 17),
+         (2, 3, 5), (2, 4, 12),
+         (3, 4, 7), (3, 6, 27),
          (4, 5, 5), (4, 6, 15),
          (5, 6, 6), (5, 7, 14),
          (6, 7, 6), (6, 8, 15), (6, 10, 75),
