@@ -12,7 +12,7 @@ def cargar_datos_grafo(graph):
             # Por cada linea en el archivo, strip() borra los espacios en blanco que haya
             # antes y despues del string. Split() corta el string cada vez que encuentra un
             # espacio en blanco. Asi se obtienen tres strings que se guardan en u, v (los nodos) y weight
-            # map(int, etc) convierte los strings en enteros
+            # # map(int, etc) convierte los strings en enteros
             u, v, weight = map(int, line.strip().split())
             # Despues con add_edge se agrega el arco con su peso al grafo
             graph.add_edge(u, v, weight=weight)
@@ -133,7 +133,7 @@ def hyper_jump(graph, ship, load, affected_node):
     for u, v, data in graph.edges(data=True):
         if ship.get('speed') == 3 and u != affected_node and v != affected_node:
             if data['weight'] >= 25:
-                data['weight'] -= int(data['weight'] * abs((load - 115)) / 100)
+                data['weight'] -= int(data['weight'] * abs((load - 95)) / 100)
 
 
 def dijkstra(graph, ini, fin):
