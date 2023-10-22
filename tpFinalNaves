@@ -273,11 +273,15 @@ ruta_mas_corta = dijkstra(G, origen, destino)
 mapa_ruta_mas_corta = [(ruta_mas_corta[i], ruta_mas_corta[i+1]) for i in range(len(ruta_mas_corta) - 1)]
 
 distancia_recorrida = peso_ruta(G, ruta_mas_corta)
+peajes = (destino - origen) * 130
+combustible = (destino - origen) * 240
 
 print()
 recompensa = int(math.pow((destino - origen), 2) * cargamento / distancia_recorrida) * 100
 print('Mercancia transportada exitosamente')
 print(f'Su recompensa es de {recompensa} créditos')
+ganancia_neta = recompensa - peajes - combustible
+print(f'Descontando peajes y combustible le quedan {ganancia_neta} créditos')
 
 edge_labels = {(u, v): G[u][v]["weight"] for (u, v) in G.edges()}
 fig, ax = plt.subplots()
