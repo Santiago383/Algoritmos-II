@@ -4,6 +4,31 @@ import math
 import random
 
 
+def cargar_datos_grafo(graph):
+
+    with open('C:/Users/Usuario/Desktop/ucalp1/Algo2/tpGrafos/datosGrafo.txt', 'r') as file:
+        for line in file:
+            u, v, weight = map(int, line.strip().split())
+            graph.add_edge(u, v, weight=weight)
+
+
+def dibujar_galaxia(gr, arcos, pos, sizes, label_list, colors, title):
+
+    edge_labels = {(u, v): gr[u][v]["weight"] for (u, v) in gr.edges()}
+    fig, ax = plt.subplots()
+    fig.set_facecolor('whitesmoke')
+    ax.set_facecolor('midnightblue')
+    nx.draw_networkx_nodes(gr, pos, node_size=sizes, node_color=colors)
+    nx.draw_networkx_edges(gr, pos, edgelist=list(gr.edges()), edge_color='gainsboro', node_size=750)
+    nx.draw_networkx_edges(gr, pos, edgelist=list(arcos), edge_color='red', node_size=750)
+    nx.draw_networkx_labels(gr, pos, labels=label_list, verticalalignment='bottom', font_color='whitesmoke',
+                            font_size=10)
+    nx.draw_networkx_edge_labels(gr, pos, edge_labels=edge_labels, font_size=8, font_color='whitesmoke',
+                                 bbox=dict(color='midnightblue'))
+    plt.title(title)
+    plt.show()
+
+
 def calcular_carga(ship, load):
     carga = 0
 
@@ -155,21 +180,8 @@ nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 G.add_nodes_from(nodes)
 
-edges = [(1, 2, 6), (1, 3, 10), (1, 4, 17),
-         (2, 3, 5), (2, 4, 12),
-         (3, 4, 7), (3, 6, 27),
-         (4, 5, 5), (4, 6, 15),
-         (5, 6, 6), (5, 7, 14),
-         (6, 7, 6), (6, 8, 15), (6, 10, 75),
-         (7, 8, 8),
-         (8, 9, 10), (8, 10, 24), (8, 11, 32),
-         (9, 10, 10), (9, 11, 18),
-         (10, 11, 8), (10, 12, 22),
-         (11, 12, 9)]
+cargar_datos_grafo(G)
 
-G.add_weighted_edges_from(edges)
-
-# Define varias características para que el grafo quede visualmente estético
 pos = {1: (-1.08, 0.78), 2: (-0.69, 0.76), 3: (-0.57, 0.49),
        4: (-0.95, 0.10), 5: (-0.58, -0.17), 6: (-0.08, 0.07),
        7: (0.10, -0.19), 8: (0.51, -0.25), 9: (0.97, -0.06),
@@ -185,18 +197,10 @@ label_list = {1: 'Terra', 2: 'Ariano', 3: 'Soleios', 4: 'Rodeon', 5: 'Pyron',
 colors = ['royalblue', 'indianred', 'forestgreen', 'gray', 'red', 'slateblue',
           'dodgerblue', 'sienna', 'firebrick', 'maroon', 'tomato', 'darkcyan']
 
-edge_labels = {(u, v): G[u][v]["weight"] for (u, v) in G.edges()}
-fig, ax = plt.subplots()
-fig.set_facecolor('whitesmoke')
-ax.set_facecolor('midnightblue')
-nx.draw_networkx_nodes(G, pos, node_size=sizes, node_color=colors)
-nx.draw_networkx_edges(G, pos, edgelist=list(G.edges()), edge_color='gainsboro', node_size=750)
-nx.draw_networkx_labels(G, pos, labels=label_list, verticalalignment='bottom', font_color='whitesmoke', font_size=10)
-nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8, font_color='whitesmoke',
-                             bbox=dict(color='midnightblue'))
-plt.title('Mapa de la Galaxia')
-# Muestra el grafo al usuario
-plt.show()
+mapa_ruta_mas_corta = []
+
+titulo = 'Mapa de la Galaxia'
+dibujar_galaxia(G, mapa_ruta_mas_corta, pos, sizes, label_list, colors, titulo)
 
 spaceships = {1: {'speed': 3, 'capacity': 1, 'weapons': 1, 'armor': 1},
               2: {'speed': 1, 'capacity': 3, 'weapons': 2, 'armor': 2},
@@ -246,18 +250,8 @@ speed_updates(G, chosen_ship, cargamento)
 event_updates(G, chosen_ship, random_event, random_node)
 hyper_jump(G, chosen_ship, cargamento, random_node)
 
-edge_labels = {(u, v): G[u][v]["weight"] for (u, v) in G.edges()}
-fig, ax = plt.subplots()
-fig.set_facecolor('whitesmoke')
-ax.set_facecolor('midnightblue')
-nx.draw_networkx_nodes(G, pos, node_size=sizes, node_color=colors)
-nx.draw_networkx_edges(G, pos, edgelist=list(G.edges()), edge_color='gainsboro', node_size=750)
-nx.draw_networkx_labels(G, pos, labels=label_list, verticalalignment='bottom', font_color='whitesmoke', font_size=10)
-nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8, font_color='whitesmoke',
-                             bbox=dict(color='midnightblue'))
-plt.title('Rutas actualizadas según nave/cargamento/imponderables')
-# Muestra el grafo  actualizado segun la velocidad de la nave y el evento especial al usuario
-plt.show()
+titulo = 'Ruta actualizada segun nave/carga/imponderables'
+dibujar_galaxia(G, mapa_ruta_mas_corta, pos, sizes, label_list, colors, titulo)
 
 print()
 # Pide al usuario un planeta de origen y destino
@@ -283,17 +277,5 @@ print(f'Su recompensa es de {recompensa} créditos')
 ganancia_neta = recompensa - peajes - combustible
 print(f'Descontando peajes y combustible le quedan {ganancia_neta} créditos')
 
-edge_labels = {(u, v): G[u][v]["weight"] for (u, v) in G.edges()}
-fig, ax = plt.subplots()
-fig.set_facecolor('whitesmoke')
-ax.set_facecolor('midnightblue')
-nx.draw_networkx_nodes(G, pos, node_size=sizes, node_color=colors)
-nx.draw_networkx_edges(G, pos, edgelist=list(G.edges()), edge_color='gainsboro', node_size=750)
-# Resalta los arcos de la ruta mas corta
-nx.draw_networkx_edges(G, pos, edgelist=list(mapa_ruta_mas_corta), edge_color='red', node_size=750)
-nx.draw_networkx_labels(G, pos, labels=label_list, verticalalignment='bottom', font_color='whitesmoke', font_size=10)
-nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8, font_color='whitesmoke',
-                             bbox=dict(color='midnightblue'))
-plt.title('Ruta más rápida de ' + label_list[origen] + ' a ' + label_list[destino])
-# Muestra el mapa de la galaxia con los arcos de la ruta mas corta resaltados
-plt.show()
+titulo = 'Ruta más rápida de ' + label_list[origen] + ' a ' + label_list[destino]
+dibujar_galaxia(G, mapa_ruta_mas_corta, pos, sizes, label_list, colors, titulo)
