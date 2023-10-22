@@ -173,7 +173,7 @@ def peso_ruta(graph, path):
     return peso_acumulado
 
 
-# Crea un grafo con una lista de nodos, y una lista de tuplas (nodo,nodo,peso) que indican los arcos y sus pesos
+# Crea un grafo con una lista de nodos, y lee los arcos y los pesos de un archivo
 G = nx.DiGraph()
 
 nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
