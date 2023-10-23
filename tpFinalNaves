@@ -4,7 +4,7 @@ import math
 import random
 
 
-# Abre una archivo txt que tiene en cada renglón los dos nodos que conforman cada arco, y su peso (ej: 1 2 6)
+# Abre un archivo txt que tiene en cada renglón los dos nodos que conforman cada arco, y su peso (ej: 1 2 6)
 def cargar_datos_grafo(graph):
 
     with open('datosGrafo.txt', 'r') as file:
