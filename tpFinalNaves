@@ -7,7 +7,7 @@ import random
 # Abre una archivo txt que tiene en cada renglón los dos nodos que conforman cada arco, y su peso (ej: 1 2 6)
 def cargar_datos_grafo(graph):
 
-    with open('C:/Users/Usuario/Desktop/ucalp1/Algo2/tpGrafos/datosGrafo.txt', 'r') as file:
+    with open('datosGrafo.txt', 'r') as file:
         for line in file:
             # Por cada linea en el archivo, strip() borra los espacios en blanco que haya
             # antes y despues del string. Split() corta el string cada vez que encuentra un
