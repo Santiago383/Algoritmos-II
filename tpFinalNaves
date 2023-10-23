@@ -37,6 +37,32 @@ def dibujar_galaxia(gr, arcos, pos, sizes, label_list, colors, title):
     plt.show()
 
 
+def mostrar_evento(label_list, evento, nodo):
+
+    if evento == 1:
+        print('Piratas espaciales patrullan ' + label_list[nodo] + '. (Las naves con armamento insuficiente '
+              'para destruirlos deben reducir la velocidad ')
+        print('para eludir sus radares y evitarlos)')
+    elif evento == 2:
+        print('Tormenta de asteroides en ' + label_list[nodo] + '. (Las naves con armadura insuficiente deben '
+              'reducir la velocidad para esquivarlos)')
+    elif evento == 3:
+        print('Rebeldes tienen ' + label_list[nodo] + ' sitiado. (Las naves con armamento insuficiente para '
+              'destruirlos deben reducir la velocidad para ')
+        print('eludir sus radares y evitarlos)')
+    elif evento == 4:
+        print('Anomalía gravitacional alrededor de ' + label_list[nodo] + '. (La velocidad de la nave se reduce '
+              'significativamente)')
+    elif evento == 5:
+        print('Un agujero negro entre la Puerta Intergaláctica Ignasea y el mundo de roca Abarrach permite '
+              'realizar la ruta en 1 pársec.')
+    elif evento == 6:
+        print('Estalla una supernova cerca de ' + label_list[nodo] + '. (Las naves con armadura insuficiente '
+              'deben reducir la velocidad para hacer reparaciones)')
+    elif evento == 7:
+        print('Anomalía gravitacional alrededor de ' + label_list[nodo] + ' (Impide usar hipersalto)')
+
+
 # Toma el tipo de nave y el nivel de carga elegidos y en base a la capacidad de carga maxima de la nave
 # calcula cuanta carga lleva.
 def calcular_carga(ship, load):
@@ -68,14 +94,14 @@ def actualizar_velocidad(graph, ship, load):
                 data['weight'] += int(data['weight'] * (load - 35) / 100)
         elif ship.get('speed') == 2:
             if data['weight'] < 11:
-                data['weight'] += int(data['weight'] * (load - 30) / 100)
+                data['weight'] += int(data['weight'] * (load - 25) / 100)
             else:
-                data['weight'] += int(data['weight'] * (load - 42) / 100)
+                data['weight'] += int(data['weight'] * (load - 35) / 100)
         elif ship.get('speed') == 1:
             if data['weight'] < 11:
-                data['weight'] += int(data['weight'] * (load - 35) / 100)
+                data['weight'] += int(data['weight'] * (load - 25) / 100)
             else:
-                data['weight'] += int(data['weight'] * (load - 50) / 100)
+                data['weight'] += int(data['weight'] * (load - 35) / 100)
 
 
 def actualizar_evento(graph, ship, event_code, affected_node):
@@ -194,7 +220,7 @@ def peso_ruta(graph, path):
     return peso_acumulado
 
 
-# Crea un grafo con una lista de nodos, y lee los arcos y sus pesos de un txt
+# Crea un grafo con una lista de nodos, y una lista de tuplas (nodo,nodo,peso) que indican los arcos y sus pesos
 G = nx.DiGraph()
 
 nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
@@ -246,29 +272,7 @@ cargamento = calcular_carga(nave_elegida, porcentaje)
 print()
 random_event = random.randint(1, 7)
 random_node = random.randint(1, 12)
-
-if random_event == 1:
-    print('Piratas espaciales patrullan ' + etiquetas[random_node] + '. (Las naves con armamento insuficiente para '
-          'destruirlos deben reducir la velocidad ')
-    print('para eludir sus radares y evitarlos)')
-elif random_event == 2:
-    print('Tormenta de asteroides en ' + etiquetas[random_node] + '. (Las naves con armadura insuficiente deben '
-          'reducir la velocidad para esquivarlos)')
-elif random_event == 3:
-    print('Rebeldes tienen ' + etiquetas[random_node] + ' sitiado. (Las naves con armamento insuficiente para '
-          'destruirlos deben reducir la velocidad para ')
-    print('eludir sus radares y evitarlos)')
-elif random_event == 4:
-    print('Anomalía gravitacional alrededor de ' + etiquetas[random_node] + '. (La velocidad de la nave se reduce '
-          'significativamente)')
-elif random_event == 5:
-    print('Un agujero negro entre la Puerta Intergaláctica Ignasea y el mundo de roca Abarrach permite '
-          'realizar la ruta en 1 pársec.')
-elif random_event == 6:
-    print('Estalla una supernova cerca de ' + etiquetas[random_node] + '. (Las naves con armadura insuficiente '
-          'deben reducir la velocidad para hacer reparaciones)')
-elif random_event == 7:
-    print('Anomalía gravitacional alrededor de ' + etiquetas[random_node] + ' (Impide usar hipersalto)')
+mostrar_evento(etiquetas, random_event, random_node)
 
 # Se actualizan los pesos del grafo
 actualizar_velocidad(G, nave_elegida, cargamento)
@@ -294,11 +298,11 @@ mapa_ruta_mas_corta = [(ruta_mas_corta[i], ruta_mas_corta[i+1]) for i in range(l
 
 # Se inventan algunos gastos para devolver un resultado y que el programa funcione como un mini juego
 distancia_recorrida = peso_ruta(G, ruta_mas_corta)
-peajes = (destino - origen) * 130
-combustible = (destino - origen) * 240
+peajes = destino * 130
+combustible = destino * 240
 
 print()
-recompensa = int(math.pow((destino - origen), 2) * cargamento / distancia_recorrida) * 100
+recompensa = int(math.pow(destino, 2) * cargamento / distancia_recorrida) * 100
 print('Mercancia transportada exitosamente')
 print(f'Su recompensa es de {recompensa} créditos')
 ganancia_neta = recompensa - peajes - combustible
