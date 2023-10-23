@@ -12,7 +12,7 @@ def cargar_datos_grafo(graph):
             # Por cada linea en el archivo, strip() borra los espacios en blanco que haya
             # antes y despues del string. Split() corta el string cada vez que encuentra un
             # espacio en blanco. Asi se obtienen tres strings que se guardan en u, v (los nodos) y weight
-            # # map(int, etc) convierte los strings en enteros
+            # map(int, etc) convierte los strings en enteros
             u, v, weight = map(int, line.strip().split())
             # Despues con add_edge se agrega el arco con su peso al grafo
             graph.add_edge(u, v, weight=weight)
