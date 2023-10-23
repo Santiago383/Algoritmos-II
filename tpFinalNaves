@@ -275,7 +275,7 @@ print('Carguero (Velocidad: Baja, Carga: Pesada, Armamento: Intermedio, Armadura
 print('Destructor (Velocidad: Intermedia, Carga: Intermedia, Armamento: Pesado, Armadura: Pesada)')
 nave = int(input('Crucero(1)/Carguero(2)/Destructor(3): '))
 
-# Se guarda la nave elegida por el usuario en un diccionario (las naves individuales son diccionarios)
+# Se guarda la nave elegida por el usuario en un diccionario
 nave_elegida = naves.get(nave)
 
 print('Ingrese la cantidad de mercancía que desea llevar')
