@@ -4,7 +4,7 @@ import math
 import random
 
 
-# Abre un archivo txt que tiene en cada renglón los dos nodos que conforman cada arco, y su peso (ej: 1 2 6)
+# Abre una archivo txt que tiene en cada renglón los dos nodos que conforman cada arco, y su peso (ej: 1 2 6)
 def cargar_datos_grafo(graph):
 
     with open('datosGrafo.txt', 'r') as file:
@@ -12,7 +12,7 @@ def cargar_datos_grafo(graph):
             # Por cada linea en el archivo, strip() borra los espacios en blanco que haya
             # antes y despues del string. Split() corta el string cada vez que encuentra un
             # espacio en blanco. Asi se obtienen tres strings que se guardan en u, v (los nodos) y weight
-            # map(int, etc) convierte los strings en enteros
+            # # map(int, etc) convierte los strings en enteros
             u, v, weight = map(int, line.strip().split())
             # Despues con add_edge se agrega el arco con su peso al grafo
             graph.add_edge(u, v, weight=weight)
@@ -226,6 +226,21 @@ G = nx.DiGraph()
 nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 G.add_nodes_from(nodes)
+
+# (por si no te llega el archivo txt)
+# edges = [(1, 2, 5), (1, 3, 8), (1, 4, 15),
+#          (2, 3, 4), (2, 4, 9),
+#          (3, 4, 6), (3, 6, 25),
+#          (4, 5, 5), (4, 6, 12),
+#          (5, 6, 6), (5, 7, 13),
+#          (6, 7, 6), (6, 8, 13), (6, 10, 56),
+#          (7, 8, 8),
+#          (8, 9, 10), (8, 10, 19), (8, 11, 28),
+#          (9, 10, 10), (9, 11, 15),
+#          (10, 11, 6), (10, 12, 18),
+#          (11, 12, 9)]
+
+# G.add_weighted_edges_from(edges)
 
 cargar_datos_grafo(G)
 
