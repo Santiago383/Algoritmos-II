@@ -7,7 +7,7 @@ import random
 # Abre una archivo txt que tiene en cada renglón los dos nodos que conforman cada arco, y su peso (ej: 1 2 6)
 def cargar_datos_grafo(graph):
 
-    with open('datosGrafo.txt', 'r') as file:
+    with open('C:/Users/Usuario/Desktop/ucalp1/Algo2/tpGrafos/datosGrafo.txt', 'r') as file:
         for line in file:
             # Por cada linea en el archivo, strip() borra los espacios en blanco que haya
             # antes y despues del string. Split() corta el string cada vez que encuentra un
@@ -112,44 +112,44 @@ def actualizar_evento(graph, ship, event_code, affected_node):
         if ship.get('weapons') == 1:
             for u, v, data in graph.edges(data=True):
                 if u == affected_node or v == affected_node:
-                    data['weight'] += 12
+                    data['weight'] += 22
         elif ship.get('weapons') == 2:
             for u, v, data in graph.edges(data=True):
                 if u == affected_node or v == affected_node:
-                    data['weight'] += 8
+                    data['weight'] += 14
     elif event_code == 2:
         if ship.get('armor') == 1:
             for u, v, data in graph.edges(data=True):
                 if u == affected_node or v == affected_node:
-                    data['weight'] += 18
+                    data['weight'] += 28
         elif ship.get('armor') == 2:
             for u, v, data in graph.edges(data=True):
                 if u == affected_node or v == affected_node:
-                    data['weight'] += 12
+                    data['weight'] += 20
     elif event_code == 3:
         if ship.get('weapons') == 1:
             for u, v, data in graph.edges(data=True):
                 if u == affected_node or v == affected_node:
-                    data['weight'] += 15
+                    data['weight'] += 25
         elif ship.get('weapons') == 2:
             for u, v, data in graph.edges(data=True):
                 if u == affected_node or v == affected_node:
-                    data['weight'] += 10
+                    data['weight'] += 15
     elif event_code == 4:
         for u, v, data in graph.edges(data=True):
             if u == affected_node or v == affected_node:
-                data['weight'] += 12
+                data['weight'] += 16
     elif event_code == 5:
         graph[6][10]['weight'] = 1
     elif event_code == 6:
         if ship.get('armor') == 1:
             for u, v, data in graph.edges(data=True):
                 if u == affected_node or v == affected_node:
-                    data['weight'] += 18
+                    data['weight'] += 28
         elif ship.get('armor') == 2:
             for u, v, data in graph.edges(data=True):
                 if u == affected_node or v == affected_node:
-                    data['weight'] += 12
+                    data['weight'] += 20
 
 
 def hyper_jump(graph, ship, load, affected_node):
@@ -220,7 +220,7 @@ def peso_ruta(graph, path):
     return peso_acumulado
 
 
-# Crea un grafo con una lista de nodos, y lee los arcos y sus pesos de un txt
+# Crea un grafo con una lista de nodos
 G = nx.DiGraph()
 
 nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
@@ -260,7 +260,7 @@ print('Carguero (Velocidad: Baja, Carga: Pesada, Armamento: Intermedio, Armadura
 print('Destructor (Velocidad: Intermedia, Carga: Intermedia, Armamento: Pesado, Armadura: Pesada)')
 nave = int(input('Crucero(1)/Carguero(2)/Destructor(3): '))
 
-# Se guarda la nave elegida por el usuario en un diccionario
+# Se guarda la nave elegida por el usuario en un diccionario (las naves individuales son diccionarios)
 nave_elegida = naves.get(nave)
 
 print('Ingrese la cantidad de mercancía que desea llevar')
@@ -268,7 +268,7 @@ porcentaje = int(input('(Ingrese un valor entre 50 -carga mínima- y 100 -carga 
 
 cargamento = calcular_carga(nave_elegida, porcentaje)
 
-# Evento especial y el nodo donde sucede (incompleto)
+# Evento especial y el nodo donde sucede
 print()
 random_event = random.randint(1, 7)
 random_node = random.randint(1, 12)
@@ -298,11 +298,11 @@ mapa_ruta_mas_corta = [(ruta_mas_corta[i], ruta_mas_corta[i+1]) for i in range(l
 
 # Se inventan algunos gastos para devolver un resultado y que el programa funcione como un mini juego
 distancia_recorrida = peso_ruta(G, ruta_mas_corta)
-peajes = destino * 130
-combustible = destino * 240
+peajes = (destino - origen) * 130
+combustible = (destino - origen) * 240
 
 print()
-recompensa = int(math.pow(destino, 2) * cargamento / distancia_recorrida) * 100
+recompensa = int(math.pow((destino - origen), 2) * cargamento / distancia_recorrida) * 100
 print('Mercancia transportada exitosamente')
 print(f'Su recompensa es de {recompensa} créditos')
 ganancia_neta = recompensa - peajes - combustible
